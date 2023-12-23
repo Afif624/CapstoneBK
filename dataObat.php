@@ -4,30 +4,24 @@ error_reporting(0);
 session_start();
 
 if (isset($_POST['save'])){
-  $nama_baru = $_POST['newNama'];
-  $username_baru = $_POST['newUsername'];
-  $password_baru = $_POST['newPassword'];
-  $alamat_baru = $_POST['newAlamat'];
-  $no_hp_baru = $_POST['newNoHP'];
-  $poli_baru = $_POST['newPoli'];
+  $namaobat_baru = $_POST['newNamaObat'];
+  $kemasan_baru = $_POST['newKemasan'];
+  $harga_baru = $_POST['newHarga'];
   if (!empty($_POST['id'])){
     $id_baru = $_POST['id'];
-    $queri1 = mysqli_query($mysqli, "UPDATE dokter SET 
-        nama='$nama_baru',
-        username='$username_baru',
-        password='$password_baru', 
-        alamat='$alamat_baru',
-        no_hp='$no_hp_baru',
-        id_poli='$poli_baru' WHERE id='$id_baru'");
-    echo "<script>alert('Selamat, Anda berhasil merubah data Dokter!');
-        window.location.href = 'dataDokter.php';
+    $queri1 = mysqli_query($mysqli, "UPDATE obat SET 
+        nama_obat='$namaobat_baru',
+        kemasan='$kemasan_baru',
+        harga='$harga_baru' WHERE id='$id_baru'");
+    echo "<script>alert('Selamat, Anda berhasil merubah data Obat!');
+        window.location.href = 'dataObat.php';
             </script>";
   } else {
     $queri2 = mysqli_query($mysqli, "INSERT INTO 
-        dokter(nama,username,password,alamat,no_hp,id_poli) VALUES(
-            '$nama_baru','$username_baru','$password_baru','$alamat_baru','$no_hp_baru','$poli_baru')");
-    echo "<script>alert('Selamat, Anda berhasil menambah data Dokter!');
-        window.location.href = 'dataDokter.php';
+        obat(nama_obat,kemasan,harga) VALUES(
+            '$namaobat_baru','$kemasan_baru','$harga_baru')");
+    echo "<script>alert('Selamat, Anda berhasil menambah data Obat!');
+        window.location.href = 'dataObat.php';
             </script>";
   }
 }
@@ -36,10 +30,10 @@ if (isset($_GET['aksi'])) {
   $aksi = $_GET['aksi'];
   $id = $_GET['id'];
   if ($aksi == 'hapus') {
-    $queri3 = mysqli_query($mysqli, "DELETE FROM dokter 
+    $queri3 = mysqli_query($mysqli, "DELETE FROM obat 
         WHERE id='$id'");
-    echo "<script>alert('Selamat, Anda berhasil menghapus data Dokter!');
-        window.location.href = 'dataDokter.php';
+    echo "<script>alert('Selamat, Anda berhasil menghapus data Obat!');
+        window.location.href = 'dataObat.php';
             </script>";
   }
 }
@@ -49,7 +43,7 @@ if (isset($_GET['aksi'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Data-Dokter | Admin Poliklinik</title>
+  <title>Data-Obat | Admin Poliklinik</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -135,7 +129,7 @@ if (isset($_GET['aksi'])) {
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataDokter.php" class="nav-link active">
+            <a href="dataDokter.php" class="nav-link">
               <i class="nav-icon fas fa-user-md"></i>
               <p>Data Dokter</p>
             </a>
@@ -147,7 +141,7 @@ if (isset($_GET['aksi'])) {
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataObat.php" class="nav-link">
+            <a href="dataObat.php" class="nav-link active">
               <i class="nav-icon fas fa-pills"></i>
               <p>Data Obat</p>
             </a>
@@ -172,7 +166,7 @@ if (isset($_GET['aksi'])) {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Data Dokter</h1>
+            <h1>Data Obat</h1>
           </div>
         </div>
       </div><!-- /.container-fluid -->
@@ -185,29 +179,22 @@ if (isset($_GET['aksi'])) {
           <div class="col-12">
             <form method="POST" class="card card-danger">
               <div class="card-header">
-                <h3 class="card-title">Form Input Dokter</h3>
+                <h3 class="card-title">Form Input Obat</h3>
               </div>
               <div class="card-body">
                 <?php 
                 $nama='';
-                $username='';
-                $password='';
-                $alamat='';
-                $no_hp='';
-                $poli='';
+                $kemasan='';
+                $harga='';
                 if (isset($_GET['id'])){
                   $id=$_GET['id'];
                   $queri4 = mysqli_query($mysqli, 
-                      "SELECT dokter.*, poli.nama_poli as poli FROM dokter
-                      JOIN poli ON poli.id = dokter.id_poli
-                      WHERE dokter.id='$id'");
+                      "SELECT obat.* FROM obat
+                      WHERE obat.id='$id'");
                   while ($row = mysqli_fetch_array($queri4)){
-                      $nama = $row['nama'];
-                      $username = $row['username'];
-                      $password= $row['password'];
-                      $alamat = $row['alamat'];
-                      $no_hp = $row['no_hp'];
-                      $poli = $row['poli'];
+                      $nama = $row['nama_obat'];
+                      $kemasan = $row['kemasan'];
+                      $harga = $row['harga'];
                   }?>
                   <input type="hidden" name="id" value="<?php echo $id ?>">
                   <?php 
@@ -218,7 +205,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Nama" 
-                      name="newNama" value="<?php echo $nama?>">
+                      name="newNamaObat" value="<?php echo $nama?>">
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -226,11 +213,11 @@ if (isset($_GET['aksi'])) {
 
                 <!-- Date mm/dd/yyyy -->
                 <div class="form-group">
-                  <label>Username:</label>
+                  <label>Kemasan:</label>
 
                   <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Masukkan Username" 
-                      name="newUsername" value="<?php echo $username?>">
+                    <input type="text" class="form-control" placeholder="Masukkan Kemasan" 
+                      name="newKemasan" value="<?php echo $kemasan?>">
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -238,66 +225,19 @@ if (isset($_GET['aksi'])) {
 
                 <!-- Date dd/mm/yyyy -->
                 <div class="form-group">
-                  <label>Password:</label>
-
-                  <div class="input-group">
-                    <input type="password" class="form-control" placeholder="Masukkan Password" 
-                      name="newPassword" value="<?php echo $password?>">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
-
-                <!-- Date mm/dd/yyyy -->
-                <div class="form-group">
-                  <label>Alamat:</label>
-
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Masukkan Alamat" 
-                      name="newAlamat" value="<?php echo $alamat?>">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
-
-                <!-- phone mask -->
-                <div class="form-group">
-                  <label>No HP:</label>
+                  <label>Harga:</label>
 
                   <div class="input-group">
                     <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                      <span class="input-group-text"><i class="fas fa-money-check-alt"></i></span>
                     </div>
-                    <input type="text" class="form-control" placeholder="Masukkan Nomor HP" data-inputmask='"mask": "9999-9999-9999"' data-mask 
-                      name="newNoHP" value="<?php echo $no_hp?>">
+                    <input type="number" class="form-control" placeholder="Masukkan Harga" 
+                      name="newHarga" value="<?php echo $harga?>">
                   </div>
                   <!-- /.input group -->
                 </div>
                 <!-- /.form group -->
 
-                <!-- phone mask -->
-                <div class="form-group">
-                  <label>Poli:</label>
-
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fas fa-clinic-medical"></i></span>
-                    </div>
-                    <select class="custom-select rounded-0" id="exampleSelectRounded0" name="newPoli">
-                      <?php 
-                      $select='';
-                      $queriPoli=mysqli_query($mysqli, "SELECT * FROM poli");
-                      while ($rowPoli=mysqli_fetch_array($queriPoli)){
-                          $select = ($rowPoli['nama_poli'] == $poli) ? 'selected' : '';?>
-                          <option value="<?php echo $rowPoli['id'] ?>" <?php echo $select?>>
-                              <?php echo $rowPoli['nama_poli']?>
-                          </option>
-                      <?php }?>
-                    </select>
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
               </div>
               <!-- /.card-body -->
 
@@ -309,7 +249,7 @@ if (isset($_GET['aksi'])) {
 
             <div class="card card-danger">
               <div class="card-header">
-                <h3 class="card-title">Tabel Dokter</h3>
+                <h3 class="card-title">Tabel Obat</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -318,11 +258,8 @@ if (isset($_GET['aksi'])) {
                   <tr>
                     <th>No</th>
                     <th>Nama</th>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Alamat</th>
-                    <th>No Hp</th>
-                    <th>Poli</th>
+                    <th>Kemasan</th>
+                    <th>Harga</th>
                     <th>Aksi</th>
                   </tr>
                   </thead>
@@ -330,22 +267,18 @@ if (isset($_GET['aksi'])) {
                   <?php 
                   $i= 1;
                   $queri5 = mysqli_query($mysqli, 
-                    "SELECT dokter.*, poli.nama_poli as poli FROM dokter
-                    JOIN poli ON poli.id = dokter.id_poli");
+                    "SELECT obat.* FROM obat");
                   while ($row = mysqli_fetch_array($queri5)){?>
                     <tr>
                       <td class="text-center" scope="row"><?php echo $i++ ?></td>
-                      <td><?php echo $row['nama']?></td>
-                      <td><?php echo $row['username']?></td>
-                      <td><?php echo $row['password']?></td>
-                      <td><?php echo $row['alamat']?></td>
-                      <td><?php echo $row['no_hp']?></td>
-                      <td><?php echo $row['poli']?></td>
+                      <td><?php echo $row['nama_obat']?></td>
+                      <td><?php echo $row['kemasan']?></td>
+                      <td>Rp <?php echo $row['harga']?></td>
                       <td>
                           <a class="btn btn-info rounded-pill px-3" 
-                              href="dataDokter.php?id=<?php echo $row['id'] ?>">Ubah</a>
+                              href="dataObat.php?id=<?php echo $row['id'] ?>">Ubah</a>
                           <a class="btn btn-danger rounded-pill px-3" 
-                              href="dataDokter.php?id=<?php echo $row['id']?>
+                              href="dataObat.php?id=<?php echo $row['id']?>
                                   &aksi=hapus">Hapus</a>
                       </td>
                     </tr>

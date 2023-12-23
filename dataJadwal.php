@@ -4,30 +4,25 @@ error_reporting(0);
 session_start();
 
 if (isset($_POST['save'])){
-  $nama_baru = $_POST['newNama'];
-  $username_baru = $_POST['newUsername'];
-  $password_baru = $_POST['newPassword'];
-  $alamat_baru = $_POST['newAlamat'];
-  $no_hp_baru = $_POST['newNoHP'];
-  $poli_baru = $_POST['newPoli'];
+  $iddokter= $_SESSION['id'];
+  $hari_baru = $_POST['newHari'];
+  $jammulai_baru = $_POST['newJamMulai'];
+  $jamselesai_baru = $_POST['newJamSelesai'];
   if (!empty($_POST['id'])){
     $id_baru = $_POST['id'];
-    $queri1 = mysqli_query($mysqli, "UPDATE dokter SET 
-        nama='$nama_baru',
-        username='$username_baru',
-        password='$password_baru', 
-        alamat='$alamat_baru',
-        no_hp='$no_hp_baru',
-        id_poli='$poli_baru' WHERE id='$id_baru'");
-    echo "<script>alert('Selamat, Anda berhasil merubah data Dokter!');
-        window.location.href = 'dataDokter.php';
+    $queri1 = mysqli_query($mysqli, "UPDATE jadwal_periksa SET 
+        nama_obat='$hari_baru',
+        kemasan='$jammulai_baru',
+        harga='$jamselesai_baru' WHERE id='$id_baru'");
+    echo "<script>alert('Selamat, Anda berhasil merubah data Jadwal!');
+        window.location.href = 'dataJadwal.php';
             </script>";
   } else {
     $queri2 = mysqli_query($mysqli, "INSERT INTO 
-        dokter(nama,username,password,alamat,no_hp,id_poli) VALUES(
-            '$nama_baru','$username_baru','$password_baru','$alamat_baru','$no_hp_baru','$poli_baru')");
-    echo "<script>alert('Selamat, Anda berhasil menambah data Dokter!');
-        window.location.href = 'dataDokter.php';
+        jadwal_periksa(id_dokter,nama_obat,kemasan,harga) VALUES(
+            '$iddokter','$hari_baru','$jammulai_baru','$jamselesai_baru')");
+    echo "<script>alert('Selamat, Anda berhasil menambah data Jadwal!');
+        window.location.href = 'dataJadwal.php';
             </script>";
   }
 }
@@ -36,10 +31,10 @@ if (isset($_GET['aksi'])) {
   $aksi = $_GET['aksi'];
   $id = $_GET['id'];
   if ($aksi == 'hapus') {
-    $queri3 = mysqli_query($mysqli, "DELETE FROM dokter 
+    $queri3 = mysqli_query($mysqli, "DELETE FROM jadwal_periksa 
         WHERE id='$id'");
-    echo "<script>alert('Selamat, Anda berhasil menghapus data Dokter!');
-        window.location.href = 'dataDokter.php';
+    echo "<script>alert('Selamat, Anda berhasil menghapus data Obat!');
+        window.location.href = 'dataJadwal.php';
             </script>";
   }
 }
@@ -49,7 +44,7 @@ if (isset($_GET['aksi'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Data-Dokter | Admin Poliklinik</title>
+  <title>Data-Jadwal | Dokter Poliklinik</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -107,7 +102,7 @@ if (isset($_GET['aksi'])) {
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Admin</a>
+          <a href="#" class="d-block">Dokter</a>
         </div>
       </div>
 
@@ -128,34 +123,34 @@ if (isset($_GET['aksi'])) {
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <li class="nav-item">
-            <a href="admin.php" class="nav-link">
+               <li class="nav-item">
+            <a href="dokter.php" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>Dashboard</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataDokter.php" class="nav-link active">
+            <a href="dataDiri.php" class="nav-link">
               <i class="nav-icon fas fa-user-md"></i>
-              <p>Data Dokter</p>
+              <p>Data Diri</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataPasien.php" class="nav-link">
-              <i class="nav-icon fas fa-procedures"></i>
-              <p>Data Pasien</p>
+            <a href="dataJadwal.php" class="nav-link active">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>Data Jadwal</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataObat.php" class="nav-link">
-              <i class="nav-icon fas fa-pills"></i>
-              <p>Data Obat</p>
+            <a href="dataPeriksa.php" class="nav-link">
+              <i class="nav-icon fas fa-stethoscope"></i>
+              <p>Data Periksa</p>
             </a>
           </li>
           <li class="nav-item">
             <a href="dataPoli.php" class="nav-link">
-              <i class="nav-icon fas fa-clinic-medical"></i>
-              <p>Data Poli</p>
+              <i class="nav-icon fas fa-notes-medical"></i>
+              <p>Data Riwayat Pasien</p>
             </a>
           </li>
         </ul>
@@ -172,7 +167,7 @@ if (isset($_GET['aksi'])) {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Data Dokter</h1>
+            <h1>Data Obat</h1>
           </div>
         </div>
       </div><!-- /.container-fluid -->
@@ -185,119 +180,76 @@ if (isset($_GET['aksi'])) {
           <div class="col-12">
             <form method="POST" class="card card-danger">
               <div class="card-header">
-                <h3 class="card-title">Form Input Dokter</h3>
+                <h3 class="card-title">Form Input Obat</h3>
               </div>
               <div class="card-body">
                 <?php 
-                $nama='';
-                $username='';
-                $password='';
-                $alamat='';
-                $no_hp='';
-                $poli='';
+                $iddokter= $_SESSION['id'];
+                $hari='';
+                $jammulai='';
+                $jamselesai='';
                 if (isset($_GET['id'])){
                   $id=$_GET['id'];
                   $queri4 = mysqli_query($mysqli, 
-                      "SELECT dokter.*, poli.nama_poli as poli FROM dokter
-                      JOIN poli ON poli.id = dokter.id_poli
-                      WHERE dokter.id='$id'");
+                      "SELECT * FROM jadwal_periksa
+                      WHERE id_dokter=$iddokter");
                   while ($row = mysqli_fetch_array($queri4)){
-                      $nama = $row['nama'];
-                      $username = $row['username'];
-                      $password= $row['password'];
-                      $alamat = $row['alamat'];
-                      $no_hp = $row['no_hp'];
-                      $poli = $row['poli'];
+                      $hari = $row['hari'];
+                      $jammulai = $row['jam_mulai'];
+                      $jamselesai = $row['jam_selesai'];
                   }?>
                   <input type="hidden" name="id" value="<?php echo $id ?>">
                   <?php 
                 }?>
-                <!-- Date dd/mm/yyyy -->
-                <div class="form-group">
-                  <label>Nama:</label>
-
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Masukkan Nama" 
-                      name="newNama" value="<?php echo $nama?>">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
-
-                <!-- Date mm/dd/yyyy -->
-                <div class="form-group">
-                  <label>Username:</label>
-
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Masukkan Username" 
-                      name="newUsername" value="<?php echo $username?>">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
-
-                <!-- Date dd/mm/yyyy -->
-                <div class="form-group">
-                  <label>Password:</label>
-
-                  <div class="input-group">
-                    <input type="password" class="form-control" placeholder="Masukkan Password" 
-                      name="newPassword" value="<?php echo $password?>">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
-
-                <!-- Date mm/dd/yyyy -->
-                <div class="form-group">
-                  <label>Alamat:</label>
-
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Masukkan Alamat" 
-                      name="newAlamat" value="<?php echo $alamat?>">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
-
                 <!-- phone mask -->
                 <div class="form-group">
-                  <label>No HP:</label>
-
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                    </div>
-                    <input type="text" class="form-control" placeholder="Masukkan Nomor HP" data-inputmask='"mask": "9999-9999-9999"' data-mask 
-                      name="newNoHP" value="<?php echo $no_hp?>">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
-
-                <!-- phone mask -->
-                <div class="form-group">
-                  <label>Poli:</label>
+                  <label>Hari:</label>
 
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text"><i class="fas fa-clinic-medical"></i></span>
                     </div>
-                    <select class="custom-select rounded-0" id="exampleSelectRounded0" name="newPoli">
+                    <select class="custom-select rounded-0" id="exampleSelectRounded0" name="newHari">
                       <?php 
                       $select='';
-                      $queriPoli=mysqli_query($mysqli, "SELECT * FROM poli");
-                      while ($rowPoli=mysqli_fetch_array($queriPoli)){
-                          $select = ($rowPoli['nama_poli'] == $poli) ? 'selected' : '';?>
-                          <option value="<?php echo $rowPoli['id'] ?>" <?php echo $select?>>
-                              <?php echo $rowPoli['nama_poli']?>
+                      $queriHari=mysqli_query($mysqli, "SELECT SUBSTRING(COLUMN_TYPE,5) as harii
+                          FROM information_schema.COLUMNS
+                          WHERE TABLE_NAME='jadwal_periksa' AND COLUMN_NAME='hari'");
+                      while ($rowHari=mysqli_fetch_array($queriHari)){
+                          $select = ($rowHari['nama_poli'] == $poli) ? 'selected' : '';?>
+                          <option value="<?php echo $rowHari['id'] ?>" <?php echo $select?>>
+                              <?php echo $rowHari?>
                           </option>
                       <?php }?>
                     </select>
                   </div>
                   <!-- /.input group -->
                 </div>
+
+                <!-- Date mm/dd/yyyy -->
+                <div class="form-group">
+                  <label>Jam Mulai:</label>
+
+                  <div class="input-group">
+                    <input type="time" class="form-control"
+                      name="newJamMulai" value="<?php echo $jammulai?>">
+                  </div>
+                  <!-- /.input group -->
+                </div>
                 <!-- /.form group -->
+
+                <!-- Date dd/mm/yyyy -->
+                <div class="form-group">
+                  <label>Jam Selesai:</label>
+
+                  <div class="input-group">
+                    <input type="time" class="form-control" 
+                      name="newJamSelesai" value="<?php echo $jamselesai?>">
+                  </div>
+                  <!-- /.input group -->
+                </div>
+                <!-- /.form group -->
+
               </div>
               <!-- /.card-body -->
 
@@ -309,7 +261,7 @@ if (isset($_GET['aksi'])) {
 
             <div class="card card-danger">
               <div class="card-header">
-                <h3 class="card-title">Tabel Dokter</h3>
+                <h3 class="card-title">Tabel Obat</h3>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -318,11 +270,8 @@ if (isset($_GET['aksi'])) {
                   <tr>
                     <th>No</th>
                     <th>Nama</th>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Alamat</th>
-                    <th>No Hp</th>
-                    <th>Poli</th>
+                    <th>Kemasan</th>
+                    <th>Harga</th>
                     <th>Aksi</th>
                   </tr>
                   </thead>
@@ -330,22 +279,18 @@ if (isset($_GET['aksi'])) {
                   <?php 
                   $i= 1;
                   $queri5 = mysqli_query($mysqli, 
-                    "SELECT dokter.*, poli.nama_poli as poli FROM dokter
-                    JOIN poli ON poli.id = dokter.id_poli");
+                    "SELECT obat.* FROM obat");
                   while ($row = mysqli_fetch_array($queri5)){?>
                     <tr>
                       <td class="text-center" scope="row"><?php echo $i++ ?></td>
-                      <td><?php echo $row['nama']?></td>
-                      <td><?php echo $row['username']?></td>
-                      <td><?php echo $row['password']?></td>
-                      <td><?php echo $row['alamat']?></td>
-                      <td><?php echo $row['no_hp']?></td>
-                      <td><?php echo $row['poli']?></td>
+                      <td><?php echo $row['nama_obat']?></td>
+                      <td><?php echo $row['kemasan']?></td>
+                      <td>Rp <?php echo $row['harga']?></td>
                       <td>
                           <a class="btn btn-info rounded-pill px-3" 
-                              href="dataDokter.php?id=<?php echo $row['id'] ?>">Ubah</a>
+                              href="dataObat.php?id=<?php echo $row['id'] ?>">Ubah</a>
                           <a class="btn btn-danger rounded-pill px-3" 
-                              href="dataDokter.php?id=<?php echo $row['id']?>
+                              href="dataObat.php?id=<?php echo $row['id']?>
                                   &aksi=hapus">Hapus</a>
                       </td>
                     </tr>

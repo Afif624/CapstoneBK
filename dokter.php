@@ -8,7 +8,7 @@ session_start();
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard | Admin Poliklinik</title>
+  <title>Dashboard | Dokter Poliklinik</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -65,7 +65,7 @@ session_start();
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Admin</a>
+          <a href="#" class="d-block">Dokter</a>
         </div>
       </div>
 
@@ -87,33 +87,33 @@ session_start();
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item">
-            <a href="admin.php" class="nav-link active">
+            <a href="dokter.php" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>Dashboard</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataDokter.php" class="nav-link">
+            <a href="dataDiri.php" class="nav-link">
               <i class="nav-icon fas fa-user-md"></i>
-              <p>Data Dokter</p>
+              <p>Data Diri</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataPasien.php" class="nav-link">
-              <i class="nav-icon fas fa-procedures"></i>
-              <p>Data Pasien</p>
+            <a href="dataJadwal.php" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>Data Jadwal</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataObat.php" class="nav-link">
-              <i class="nav-icon fas fa-pills"></i>
-              <p>Data Obat</p>
+            <a href="dataPeriksa.php" class="nav-link">
+              <i class="nav-icon fas fa-stethoscope"></i>
+              <p>Data Periksa</p>
             </a>
           </li>
           <li class="nav-item">
             <a href="dataPoli.php" class="nav-link">
-              <i class="nav-icon fas fa-clinic-medical"></i>
-              <p>Data Poli</p>
+              <i class="nav-icon fas fa-notes-medical"></i>
+              <p>Data Riwayat Pasien</p>
             </a>
           </li>
         </ul>

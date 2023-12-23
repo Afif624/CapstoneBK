@@ -11,23 +11,23 @@ if (isset($_POST['submit'])) {
         window.location.href = 'admin.php';
             </script>";
   } else {
-    $sql1 = "SELECT * FROM users WHERE email='$username'";
+    $sql1 = "SELECT * FROM dokter WHERE username='$username'";
     $result1 = mysqli_query($mysqli, $sql1);
     if ($result1->num_rows > 0) {
-        $sql2 = "SELECT * FROM users WHERE password='$password'";
+        $sql2 = "SELECT * FROM dokter WHERE password='$password'";
         $result2 = mysqli_query($mysqli, $sql2);
         if ($result2->num_rows > 0) {
             $row = mysqli_fetch_assoc($result1);
-            $_SESSION['username'] = $row['username'];
-            $_SESSION['email'] = $row['email'];
+            $_SESSION['nama'] = $row['nama'];
+            $_SESSION['id'] = $row['id'];
             echo "<script>alert('Selamat, Anda berhasil Login!');
-                window.location.href = 'index.php';
+                window.location.href = 'dokter.php';
                     </script>";
         } else {
             echo "<script>alert('Password Anda salah. Silahkan coba lagi!')</script>";
         }
     } else {
-        echo "<script>alert('Email Anda salah. Silahkan coba lagi!')</script>";
+        echo "<script>alert('Username Anda salah. Silahkan coba lagi!')</script>";
     }
   }
 }

@@ -10,38 +10,18 @@ if (isset($_POST['save'])){
   $alamat_baru = $_POST['newAlamat'];
   $no_hp_baru = $_POST['newNoHP'];
   $poli_baru = $_POST['newPoli'];
-  if (!empty($_POST['id'])){
-    $id_baru = $_POST['id'];
-    $queri1 = mysqli_query($mysqli, "UPDATE dokter SET 
-        nama='$nama_baru',
-        username='$username_baru',
-        password='$password_baru', 
-        alamat='$alamat_baru',
-        no_hp='$no_hp_baru',
-        id_poli='$poli_baru' WHERE id='$id_baru'");
-    echo "<script>alert('Selamat, Anda berhasil merubah data Dokter!');
-        window.location.href = 'dataDokter.php';
-            </script>";
-  } else {
-    $queri2 = mysqli_query($mysqli, "INSERT INTO 
-        dokter(nama,username,password,alamat,no_hp,id_poli) VALUES(
-            '$nama_baru','$username_baru','$password_baru','$alamat_baru','$no_hp_baru','$poli_baru')");
-    echo "<script>alert('Selamat, Anda berhasil menambah data Dokter!');
-        window.location.href = 'dataDokter.php';
-            </script>";
-  }
-}
-
-if (isset($_GET['aksi'])) {
-  $aksi = $_GET['aksi'];
-  $id = $_GET['id'];
-  if ($aksi == 'hapus') {
-    $queri3 = mysqli_query($mysqli, "DELETE FROM dokter 
-        WHERE id='$id'");
-    echo "<script>alert('Selamat, Anda berhasil menghapus data Dokter!');
-        window.location.href = 'dataDokter.php';
-            </script>";
-  }
+    
+  $id_baru = $_SESSION['id'];
+  $queri1 = mysqli_query($mysqli, "UPDATE dokter SET 
+      nama='$nama_baru',
+      username='$username_baru',
+      password='$password_baru', 
+      alamat='$alamat_baru',
+      no_hp='$no_hp_baru',
+      id_poli='$poli_baru' WHERE id='$id_baru'");
+  echo "<script>alert('Selamat, Anda berhasil merubah data Dokter Anda!');
+      window.location.href = 'dataDiri.php';
+          </script>";
 }
 ?>
 <!DOCTYPE html>
@@ -49,7 +29,7 @@ if (isset($_GET['aksi'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Data-Dokter | Admin Poliklinik</title>
+  <title>Data-Diri | Dokter Poliklinik</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -107,7 +87,7 @@ if (isset($_GET['aksi'])) {
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Admin</a>
+          <a href="#" class="d-block">Dokter</a>
         </div>
       </div>
 
@@ -128,34 +108,34 @@ if (isset($_GET['aksi'])) {
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-          <li class="nav-item">
-            <a href="admin.php" class="nav-link">
+               <li class="nav-item">
+            <a href="dokter.php" class="nav-link">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>Dashboard</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataDokter.php" class="nav-link active">
+            <a href="dataDiri.php" class="nav-link active">
               <i class="nav-icon fas fa-user-md"></i>
-              <p>Data Dokter</p>
+              <p>Data Diri</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataPasien.php" class="nav-link">
-              <i class="nav-icon fas fa-procedures"></i>
-              <p>Data Pasien</p>
+            <a href="dataJadwal.php" class="nav-link">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>Data Jadwal</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataObat.php" class="nav-link">
-              <i class="nav-icon fas fa-pills"></i>
-              <p>Data Obat</p>
+            <a href="dataPeriksa.php" class="nav-link">
+              <i class="nav-icon fas fa-stethoscope"></i>
+              <p>Data Periksa</p>
             </a>
           </li>
           <li class="nav-item">
             <a href="dataPoli.php" class="nav-link">
-              <i class="nav-icon fas fa-clinic-medical"></i>
-              <p>Data Poli</p>
+              <i class="nav-icon fas fa-notes-medical"></i>
+              <p>Data Riwayat Pasien</p>
             </a>
           </li>
         </ul>
@@ -172,7 +152,7 @@ if (isset($_GET['aksi'])) {
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Data Dokter</h1>
+            <h1>Data Diri</h1>
           </div>
         </div>
       </div><!-- /.container-fluid -->
@@ -184,9 +164,6 @@ if (isset($_GET['aksi'])) {
         <div class="row">
           <div class="col-12">
             <form method="POST" class="card card-danger">
-              <div class="card-header">
-                <h3 class="card-title">Form Input Dokter</h3>
-              </div>
               <div class="card-body">
                 <?php 
                 $nama='';
@@ -195,8 +172,8 @@ if (isset($_GET['aksi'])) {
                 $alamat='';
                 $no_hp='';
                 $poli='';
-                if (isset($_GET['id'])){
-                  $id=$_GET['id'];
+                if (isset($_SESSION['id'])){
+                  $id=$_SESSION['id'];
                   $queri4 = mysqli_query($mysqli, 
                       "SELECT dokter.*, poli.nama_poli as poli FROM dokter
                       JOIN poli ON poli.id = dokter.id_poli
@@ -306,54 +283,6 @@ if (isset($_GET['aksi'])) {
               </div>
               <!-- /.card -->
             </form> 
-
-            <div class="card card-danger">
-              <div class="card-header">
-                <h3 class="card-title">Tabel Dokter</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
-                  <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Nama</th>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Alamat</th>
-                    <th>No Hp</th>
-                    <th>Poli</th>
-                    <th>Aksi</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <?php 
-                  $i= 1;
-                  $queri5 = mysqli_query($mysqli, 
-                    "SELECT dokter.*, poli.nama_poli as poli FROM dokter
-                    JOIN poli ON poli.id = dokter.id_poli");
-                  while ($row = mysqli_fetch_array($queri5)){?>
-                    <tr>
-                      <td class="text-center" scope="row"><?php echo $i++ ?></td>
-                      <td><?php echo $row['nama']?></td>
-                      <td><?php echo $row['username']?></td>
-                      <td><?php echo $row['password']?></td>
-                      <td><?php echo $row['alamat']?></td>
-                      <td><?php echo $row['no_hp']?></td>
-                      <td><?php echo $row['poli']?></td>
-                      <td>
-                          <a class="btn btn-info rounded-pill px-3" 
-                              href="dataDokter.php?id=<?php echo $row['id'] ?>">Ubah</a>
-                          <a class="btn btn-danger rounded-pill px-3" 
-                              href="dataDokter.php?id=<?php echo $row['id']?>
-                                  &aksi=hapus">Hapus</a>
-                      </td>
-                    </tr>
-                  <?php }?>
-                  </tbody>
-                </table>
-              </div>
-            </div>
           </div>
         </div>
       </div>
