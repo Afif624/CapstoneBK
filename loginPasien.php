@@ -6,29 +6,23 @@ session_start();
 if (isset($_POST['submit'])) {
   $username = $_POST['username'];
   $password = $_POST['password'];
-  if (($username == 'admin') && ($password == 'admin')){
-    echo "<script>alert('Selamat, Anda berhasil Login!');
-        window.location.href = 'admin.php';
-            </script>";
+  $sql1 = "SELECT * FROM pasien WHERE username='$username'";
+  $result1 = mysqli_query($mysqli, $sql1);
+  if ($result1->num_rows > 0) {
+      $sql2 = "SELECT * FROM pasien WHERE password='$password'";
+      $result2 = mysqli_query($mysqli, $sql2);
+      if ($result2->num_rows > 0) {
+          $row = mysqli_fetch_assoc($result1);
+          $_SESSION['nama'] = $row['nama'];
+          $_SESSION['id'] = $row['id'];
+          echo "<script>alert('Selamat, Anda berhasil Login!');
+              window.location.href = 'pasien.php';
+                  </script>";
+      } else {
+          echo "<script>alert('Password Anda salah. Silahkan coba lagi!')</script>";
+      }
   } else {
-    $sql1 = "SELECT * FROM dokter WHERE username='$username'";
-    $result1 = mysqli_query($mysqli, $sql1);
-    if ($result1->num_rows > 0) {
-        $sql2 = "SELECT * FROM dokter WHERE password='$password'";
-        $result2 = mysqli_query($mysqli, $sql2);
-        if ($result2->num_rows > 0) {
-            $row = mysqli_fetch_assoc($result1);
-            $_SESSION['nama'] = $row['nama'];
-            $_SESSION['id'] = $row['id'];
-            echo "<script>alert('Selamat, Anda berhasil Login!');
-                window.location.href = 'dokter.php';
-                    </script>";
-        } else {
-            echo "<script>alert('Password Anda salah. Silahkan coba lagi!')</script>";
-        }
-    } else {
-        echo "<script>alert('Username Anda salah. Silahkan coba lagi!')</script>";
-    }
+      echo "<script>alert('Username Anda salah. Silahkan coba lagi!')</script>";
   }
 }
  
@@ -57,7 +51,7 @@ if (isset($_POST['submit'])) {
       <a href="index2.html" class="h1"><b>Login</b>POLI</a>
     </div>
     <div class="card-body">
-      <p class="login-box-msg">Masuk sebagai Admin atau Dokter</p>
+      <p class="login-box-msg">Masuk sebagai Pasien</p>
 
       <form action="" method="post">
         <div class="input-group mb-3">
@@ -77,9 +71,13 @@ if (isset($_POST['submit'])) {
           </div>
         </div>
         <div class="social-auth-links text-center mt-2 mb-3">
-          <button type="submit" class="btn btn-primary btn-block" name="submit">Sign In</button>
+          <button type="submit" class="btn btn-primary btn-block" name="submit">Login Sekarang</button>
         </div>
       </form>
+
+      <div class="social-auth-links text-center mt-2 mb-3">
+        <a href="registerPasien.php" class="btn btn-block btn-primary">Menuju Page Register</a>
+      </div>
     </div>
     <!-- /.card-body -->
   </div>
