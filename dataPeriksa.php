@@ -2,34 +2,13 @@
 require 'koneksi.php';
 error_reporting(0);
 session_start();
-
-if (isset($_POST['save'])){
-  $nama_baru = $_POST['newNama'];
-  $username_baru = $_POST['newUsername'];
-  $password_baru = $_POST['newPassword'];
-  $alamat_baru = $_POST['newAlamat'];
-  $no_hp_baru = $_POST['newNoHP'];
-  $poli_baru = $_POST['newPoli'];
-    
-  $id_baru = $_SESSION['id'];
-  $queri1 = mysqli_query($mysqli, "UPDATE dokter SET 
-      nama='$nama_baru',
-      username='$username_baru',
-      password='$password_baru', 
-      alamat='$alamat_baru',
-      no_hp='$no_hp_baru',
-      id_poli='$poli_baru' WHERE id='$id_baru'");
-  echo "<script>alert('Selamat, Anda berhasil merubah data Dokter Anda!');
-      window.location.href = 'dataDiri.php';
-          </script>";
-}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Data-Diri | Dokter Poliklinik</title>
+  <title>Data-Periksa | Dokter Poliklinik</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -115,7 +94,7 @@ if (isset($_POST['save'])){
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataDiri.php" class="nav-link active">
+            <a href="dataDiri.php" class="nav-link">
               <i class="nav-icon fas fa-user-md"></i>
               <p>Data Diri</p>
             </a>
@@ -127,7 +106,7 @@ if (isset($_POST['save'])){
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataPeriksa.php" class="nav-link">
+            <a href="dataPeriksa.php" class="nav-link active">
               <i class="nav-icon fas fa-stethoscope"></i>
               <p>Data Periksa Pasien</p>
             </a>
@@ -152,7 +131,7 @@ if (isset($_POST['save'])){
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Data Diri</h1>
+            <h1>Data Pemeriksaan Pasien</h1>
           </div>
         </div>
       </div><!-- /.container-fluid -->
@@ -162,131 +141,144 @@ if (isset($_POST['save'])){
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-12">
-            <form method="POST" class="card card-danger">
+          <div class="col-12"> 
+
+            <div class="card card-danger">
+              <div class="card-header">
+                <h3 class="card-title">Tabel Periksa</h3>
+              </div>
+              <!-- /.card-header -->
               <div class="card-body">
-                <?php 
-                $nama='';
-                $username='';
-                $password='';
-                $alamat='';
-                $no_hp='';
-                $poli='';
-                if (isset($_SESSION['id'])){
-                  $id=$_SESSION['id'];
-                  $queri4 = mysqli_query($mysqli, 
-                      "SELECT dokter.*, poli.nama_poli as poli FROM dokter
-                      JOIN poli ON poli.id = dokter.id_poli
-                      WHERE dokter.id='$id'");
-                  while ($row = mysqli_fetch_array($queri4)){
-                      $nama = $row['nama'];
-                      $username = $row['username'];
-                      $password= $row['password'];
-                      $alamat = $row['alamat'];
-                      $no_hp = $row['no_hp'];
-                      $poli = $row['poli'];
-                  }?>
-                  <input type="hidden" name="id" value="<?php echo $id ?>">
+                <table id="example1" class="table table-bordered table-striped">
+                  <thead>
+                  <tr>
+                    <th>No</th>
+                    <th>Pasien</th>
+                    <th>Jadwal</th>
+                    <th>Keluhan</th>
+                    <th>No Antrian</th>
+                    <th>Aksi</th>
+                  </tr>
+                  </thead>
+                  <tbody>
                   <?php 
-                }?>
-                <!-- Date dd/mm/yyyy -->
-                <div class="form-group">
-                  <label>Nama:</label>
+                  $i= 1;
+                  $iddokter= $_SESSION['id'];
+                  $queri5 = mysqli_query($mysqli, 
+                    "SELECT daftar_poli.id as idi, daftar_poli.keluhan, daftar_poli.no_antrian, daftar_poli.pemeriksaan,jadwal_periksa.*,pasien.nama as pasien FROM daftar_poli 
+                    JOIN jadwal_periksa ON jadwal_periksa.id=daftar_poli.id_jadwal
+                    JOIN pasien ON pasien.id=daftar_poli.id_pasien
+                    WHERE jadwal_periksa.id_dokter=$iddokter
+                    ORDER BY hari,jam_mulai,no_antrian ASC");
+                  while ($row = mysqli_fetch_array($queri5)){?>
+                    <tr>
+                      <td class="text-center" scope="row"><?php echo $i++ ?></td>
+                      <td><?php echo $row['pasien']?></td>
+                      <td><?php echo $row['hari'].",".$row['jam_mulai']."-".$row['jam_selesai']?></td>
+                      <td><?php echo $row['keluhan']?></td>
+                      <td><?php echo $row['no_antrian']?></td>
+                      <td>
+                        <?php
+                        if ($row['pemeriksaan'] == 1) {?>
+                            <a class="btn btn-success rounded-pill px-3" style="pointer-events: none;">Sudah Diperiksa</a>
+                        <?php
+                        } else {?>
+                            <a class="btn btn-warning rounded-pill px-3" type="button" 
+                                data-toggle="modal" data-target="#modal-lg<?php echo $row['idi']?>">Belum Diperiksa</a>
+                        <?php }?>
+                      </td>
+                    </tr>
+                    <?php
+                    $iddafpoli_baru = $row['idi'];
+                    if (isset($_POST['save'.$iddafpoli_baru])){
+                      $tanggal_baru = date("Y-m-d");
+                      $catatan_baru = $_POST['newCatatan'];
+                      $biaya_baru = 150000;
+                      $queri1 = mysqli_query($mysqli, "INSERT INTO 
+                          periksa(id_daftar_poli,tgl_periksa,catatan,biaya_periksa) VALUES(
+                              '$iddafpoli_baru','$tanggal_baru','$catatan_baru','$biaya_baru')");
+                      if($queri1){
+                        $periksa_baru = $mysqli->insert_id;
+                        $listobat = $_POST['newIdObat'];
+                        foreach ($listobat as $obat_baru){
+                          $queri2 = mysqli_query($mysqli, "INSERT INTO 
+                              detail_periksa(id_periksa,id_obat) VALUES('$periksa_baru','$obat_baru')");
+                        }
+                      }
+                      $queri3 = mysqli_query($mysqli, "UPDATE daftar_poli SET
+                                pemeriksaan='1' WHERE id='$iddafpoli_baru'");
+                      echo "<script>alert('Selamat, Anda berhasil menambah data Pemeriksaan!');
+                            window.location.href = 'dataPeriksa.php';
+                                </script>";
+                    }
+                    ?>
+                    <div class="modal fade" id="modal-lg<?php echo $row['idi']?>">
+                      <div class="modal-dialog modal-lg">
+                        <div method="POST" class="modal-content">
+                          <form method="post">
+                          <div class="modal-header">
+                            <h4 class="modal-title">Form Input Pemeriksaan</h4>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <!-- Date mm/dd/yyyy -->
+                            <div class="form-group">
+                              <label>Catatan:</label>
 
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Masukkan Nama" 
-                      name="newNama" value="<?php echo $nama?>">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
+                              <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Masukkan Catatan"
+                                  name="newCatatan">
+                              </div>
+                              <!-- /.input group -->
+                            </div>
+                            <!-- /.form group -->
 
-                <!-- Date mm/dd/yyyy -->
-                <div class="form-group">
-                  <label>Username:</label>
+                            <!-- phone mask -->
+                            <div class="form-group">
+                              <label>Obat:</label>
 
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Masukkan Username" 
-                      name="newUsername" value="<?php echo $username?>">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
-
-                <!-- Date dd/mm/yyyy -->
-                <div class="form-group">
-                  <label>Password:</label>
-
-                  <div class="input-group">
-                    <input type="password" class="form-control" placeholder="Masukkan Password" 
-                      name="newPassword" value="<?php echo $password?>">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
-
-                <!-- Date mm/dd/yyyy -->
-                <div class="form-group">
-                  <label>Alamat:</label>
-
-                  <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Masukkan Alamat" 
-                      name="newAlamat" value="<?php echo $alamat?>">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
-
-                <!-- phone mask -->
-                <div class="form-group">
-                  <label>No HP:</label>
-
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                              <div class="input-group">
+                                <select class="custom-select rounded-0 js-example-basic-multiple" id="exampleSelectRounded0" name="newIdObat[]" multiple="multiple">
+                                  <?php 
+                                  $queriObat=mysqli_query($mysqli, "SELECT * FROM obat ORDER BY nama_obat ASC");
+                                  while ($rowObat=mysqli_fetch_array($queriObat)){?>
+                                      <option value="<?php echo $rowObat['id'] ?>" <?php echo $select?>>
+                                          <?php echo $rowObat['nama_obat']?>
+                                      </option>
+                                  <?php }?>
+                                </select>
+                              </div>
+                              <!-- /.input group -->
+                            </div>
+                          </div>
+                          <div class="modal-footer justify-content-between">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary" name="save<?php echo $row['idi']?>">Save changes</button>
+                          </div>
+                          </form>
+                        </div>
+                        <!-- /.modal-content -->
+                      </div>
+                      <!-- /.modal-dialog -->
                     </div>
-                    <input type="text" class="form-control" placeholder="Masukkan Nomor HP" data-inputmask='"mask": "9999-9999-9999"' data-mask 
-                      name="newNoHP" value="<?php echo $no_hp?>">
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
-
-                <!-- phone mask -->
-                <div class="form-group">
-                  <label>Poli:</label>
-
-                  <div class="input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text"><i class="fas fa-clinic-medical"></i></span>
-                    </div>
-                    <select class="custom-select rounded-0" id="exampleSelectRounded0" name="newPoli">
-                      <?php 
-                      $select='';
-                      $queriPoli=mysqli_query($mysqli, "SELECT * FROM poli");
-                      while ($rowPoli=mysqli_fetch_array($queriPoli)){
-                          $select = ($rowPoli['nama_poli'] == $poli) ? 'selected' : '';?>
-                          <option value="<?php echo $rowPoli['id'] ?>" <?php echo $select?>>
-                              <?php echo $rowPoli['nama_poli']?>
-                          </option>
-                      <?php }?>
-                    </select>
-                  </div>
-                  <!-- /.input group -->
-                </div>
-                <!-- /.form group -->
+                    <!-- /.modal -->
+                  <?php }?>
+                  </tbody>
+                </table>
               </div>
-              <!-- /.card-body -->
+            </div>
 
-              <div class="card-footer">
-                <button type="submit" class="btn btn-primary" name="save">Submit</button>
-              </div>
-              <!-- /.card -->
-            </form> 
           </div>
         </div>
       </div>
       <!-- /.container-fluid -->
+
+      <?php while ($row = mysqli_fetch_array($queri5)){?>
+        
+      <?php } ?>
+
     </section>
     <!-- /.content -->
   </div>
@@ -355,7 +347,9 @@ if (isset($_POST['save'])){
       "responsive": true, "lengthChange": false, "autoWidth": false,
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    
+  });
+  $(document).ready(function() {
+    $('.js-example-basic-multiple').select2();
   });
 </script>
 </body>

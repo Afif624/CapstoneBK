@@ -144,11 +144,11 @@ if (isset($_GET['aksi'])) {
           <li class="nav-item">
             <a href="dataPeriksa.php" class="nav-link">
               <i class="nav-icon fas fa-stethoscope"></i>
-              <p>Data Periksa</p>
+              <p>Data Periksa Pasien</p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataPoli.php" class="nav-link">
+            <a href="dataRiwayat.php" class="nav-link">
               <i class="nav-icon fas fa-notes-medical"></i>
               <p>Data Riwayat Pasien</p>
             </a>
