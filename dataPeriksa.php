@@ -164,13 +164,13 @@ session_start();
                   <?php 
                   $i= 1;
                   $iddokter= $_SESSION['id'];
-                  $queri5 = mysqli_query($mysqli, 
+                  $queriPeriksa = mysqli_query($mysqli, 
                     "SELECT daftar_poli.id as idi, daftar_poli.keluhan, daftar_poli.no_antrian, daftar_poli.pemeriksaan,jadwal_periksa.*,pasien.nama as pasien FROM daftar_poli 
                     JOIN jadwal_periksa ON jadwal_periksa.id=daftar_poli.id_jadwal
                     JOIN pasien ON pasien.id=daftar_poli.id_pasien
                     WHERE jadwal_periksa.id_dokter=$iddokter
                     ORDER BY hari,jam_mulai,no_antrian ASC");
-                  while ($row = mysqli_fetch_array($queri5)){?>
+                  while ($row = mysqli_fetch_array($queriPeriksa)){?>
                     <tr>
                       <td class="text-center" scope="row"><?php echo $i++ ?></td>
                       <td><?php echo $row['pasien']?></td>
@@ -188,82 +188,6 @@ session_start();
                         <?php }?>
                       </td>
                     </tr>
-                    <?php
-                    $iddafpoli_baru = $row['idi'];
-                    if (isset($_POST['save'.$iddafpoli_baru])){
-                      $tanggal_baru = date("Y-m-d");
-                      $catatan_baru = $_POST['newCatatan'];
-                      $biaya_baru = 150000;
-                      $queri1 = mysqli_query($mysqli, "INSERT INTO 
-                          periksa(id_daftar_poli,tgl_periksa,catatan,biaya_periksa) VALUES(
-                              '$iddafpoli_baru','$tanggal_baru','$catatan_baru','$biaya_baru')");
-                      if($queri1){
-                        $periksa_baru = $mysqli->insert_id;
-                        $listobat = $_POST['newIdObat'];
-                        foreach ($listobat as $obat_baru){
-                          $queri2 = mysqli_query($mysqli, "INSERT INTO 
-                              detail_periksa(id_periksa,id_obat) VALUES('$periksa_baru','$obat_baru')");
-                        }
-                      }
-                      $queri3 = mysqli_query($mysqli, "UPDATE daftar_poli SET
-                                pemeriksaan='1' WHERE id='$iddafpoli_baru'");
-                      echo "<script>alert('Selamat, Anda berhasil menambah data Pemeriksaan!');
-                            window.location.href = 'dataPeriksa.php';
-                                </script>";
-                    }
-                    ?>
-                    <div class="modal fade" id="modal-lg<?php echo $row['idi']?>">
-                      <div class="modal-dialog modal-lg">
-                        <div method="POST" class="modal-content">
-                          <form method="post">
-                          <div class="modal-header">
-                            <h4 class="modal-title">Form Input Pemeriksaan</h4>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                            </button>
-                          </div>
-                          <div class="modal-body">
-                            <!-- Date mm/dd/yyyy -->
-                            <div class="form-group">
-                              <label>Catatan:</label>
-
-                              <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Masukkan Catatan"
-                                  name="newCatatan">
-                              </div>
-                              <!-- /.input group -->
-                            </div>
-                            <!-- /.form group -->
-
-                            <!-- phone mask -->
-                            <div class="form-group">
-                              <label>Obat:</label>
-
-                              <div class="input-group">
-                                <select class="custom-select rounded-0 js-example-basic-multiple" id="exampleSelectRounded0" name="newIdObat[]" multiple="multiple">
-                                  <?php 
-                                  $queriObat=mysqli_query($mysqli, "SELECT * FROM obat ORDER BY nama_obat ASC");
-                                  while ($rowObat=mysqli_fetch_array($queriObat)){?>
-                                      <option value="<?php echo $rowObat['id'] ?>" <?php echo $select?>>
-                                          <?php echo $rowObat['nama_obat']?>
-                                      </option>
-                                  <?php }?>
-                                </select>
-                              </div>
-                              <!-- /.input group -->
-                            </div>
-                          </div>
-                          <div class="modal-footer justify-content-between">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary" name="save<?php echo $row['idi']?>">Save changes</button>
-                          </div>
-                          </form>
-                        </div>
-                        <!-- /.modal-content -->
-                      </div>
-                      <!-- /.modal-dialog -->
-                    </div>
-                    <!-- /.modal -->
                   <?php }?>
                   </tbody>
                 </table>
@@ -274,10 +198,6 @@ session_start();
         </div>
       </div>
       <!-- /.container-fluid -->
-
-      <?php while ($row = mysqli_fetch_array($queri5)){?>
-        
-      <?php } ?>
 
     </section>
     <!-- /.content -->
@@ -297,6 +217,104 @@ session_start();
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
+
+<?php 
+$i= 1;
+$iddokter= $_SESSION['id'];
+$queriPeriksa = mysqli_query($mysqli, 
+  "SELECT daftar_poli.id as idi, daftar_poli.keluhan, daftar_poli.no_antrian, daftar_poli.pemeriksaan,jadwal_periksa.*,pasien.nama as pasien FROM daftar_poli 
+  JOIN jadwal_periksa ON jadwal_periksa.id=daftar_poli.id_jadwal
+  JOIN pasien ON pasien.id=daftar_poli.id_pasien
+  WHERE jadwal_periksa.id_dokter=$iddokter
+  ORDER BY hari,jam_mulai,no_antrian ASC");
+while ($row = mysqli_fetch_array($queriPeriksa)){
+  $iddafpoli_baru = $row['idi'];
+  if (isset($_POST['save'.$iddafpoli_baru])){
+    $tanggal_baru = date("Y-m-d");
+    $catatan_baru = $_POST['newCatatan'];
+    $queri1 = mysqli_query($mysqli, "INSERT INTO 
+        periksa(id_daftar_poli,tgl_periksa,catatan) VALUES(
+            '$iddafpoli_baru','$tanggal_baru','$catatan_baru')");
+    if($queri1){
+      $periksa_baru = $mysqli->insert_id;
+      $listobat = $_POST['newIdObat'];
+      foreach ($listobat as $obat_baru){
+        $queri2 = mysqli_query($mysqli, "INSERT INTO 
+            detail_periksa(id_periksa,id_obat) VALUES('$periksa_baru','$obat_baru')");
+      }
+      $queriharga = mysqli_query($mysqli, 
+          "SELECT GROUP_CONCAT(obat.harga) as harga FROM daftar_poli 
+          JOIN jadwal_periksa ON jadwal_periksa.id=daftar_poli.id_jadwal 
+          JOIN pasien ON pasien.id=daftar_poli.id_pasien 
+          JOIN periksa ON daftar_poli.id=periksa.id_daftar_poli 
+          JOIN detail_periksa ON periksa.id=detail_periksa.id_periksa 
+          JOIN obat ON obat.id=detail_periksa.id_obat 
+          WHERE periksa.id=$periksa_baru");
+      $row = mysqli_fetch_array($queriharga);
+      $biaya_baru = 150000 + array_sum(explode(',', $row['harga']));
+      $queri3 = mysqli_query($mysqli, "UPDATE periksa SET
+                biaya_periksa='$biaya_baru' WHERE id='$periksa_baru'");
+    }
+    $queri4 = mysqli_query($mysqli, "UPDATE daftar_poli SET
+              pemeriksaan='1' WHERE id='$iddafpoli_baru'");
+    echo "<script>alert('Selamat, Anda berhasil menambah data Pemeriksaan!');
+          window.location.href = 'dataPeriksa.php';
+              </script>";
+  }
+  ?>
+  <div class="modal fade" id="modal-lg<?php echo $row['idi']?>">
+    <div class="modal-dialog modal-lg">
+      <div method="POST" class="modal-content">
+        <form method="post">
+        <div class="modal-header">
+          <h4 class="modal-title">Form Input Pemeriksaan</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Date mm/dd/yyyy -->
+          <div class="form-group">
+            <label>Catatan:</label>
+
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Masukkan Catatan"
+                name="newCatatan">
+            </div>
+            <!-- /.input group -->
+          </div>
+          <!-- /.form group -->
+
+          <!-- phone mask -->
+          <div class="form-group">
+            <label>Obat:</label>
+
+            <div class="input-group">
+              <select class="custom-select rounded-0" id="exampleSelectRounded0<?php echo $row['idi']; ?>" name="newIdObat[]" multiple="multiple">
+                <?php 
+                $queriObat=mysqli_query($mysqli, "SELECT * FROM obat ORDER BY nama_obat ASC");
+                while ($rowObat=mysqli_fetch_array($queriObat)){?>
+                    <option value="<?php echo $rowObat['id'] ?>" <?php echo $select?>>
+                        <?php echo $rowObat['nama_obat']?>
+                    </option>
+                <?php }?>
+              </select>
+            </div>
+            <!-- /.input group -->
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary" name="save<?php echo $row['idi']?>">Save changes</button>
+        </div>
+        </form>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+<?php } ?>
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
@@ -349,7 +367,9 @@ session_start();
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
   });
   $(document).ready(function() {
-    $('.js-example-basic-multiple').select2();
+    $('.custom-select').select2({
+      placeholder: "Silahkan Pilih Obat"
+    });
   });
 </script>
 </body>

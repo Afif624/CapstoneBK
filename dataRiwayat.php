@@ -173,7 +173,8 @@ session_start();
                     JOIN periksa ON daftar_poli.id=periksa.id_daftar_poli 
                     JOIN detail_periksa ON periksa.id=detail_periksa.id_periksa 
                     JOIN obat ON obat.id=detail_periksa.id_obat 
-                    WHERE jadwal_periksa.id_dokter=$iddokter;");
+                    WHERE jadwal_periksa.id_dokter=$iddokter
+                    GROUP BY periksa.id");
                   while ($row = mysqli_fetch_array($queri5)){
                     $total = $row['biaya_periksa'] + array_sum(explode(',', $row['harga']));
                     $obatList = array_unique(explode(',', $row['obat']));?>
