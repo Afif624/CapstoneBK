@@ -51,10 +51,9 @@ if (isset($_POST['submit'])) {
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
-  <!-- /.login-logo -->
-  <div class="card card-outline card-primary">
-    <div class="card-header text-center">
-      <a href="index2.html" class="h1"><b>Login</b>POLI</a>
+  <div class="card card-primary">
+    <div class="card-header text-center bg-info">
+      <a href="index2.html" class="h1 text-white"><b>Login</b>DOKTER</a>
     </div>
     <div class="card-body">
       <p class="login-box-msg">Masuk sebagai Admin atau Dokter</p>
@@ -63,29 +62,28 @@ if (isset($_POST['submit'])) {
         <div class="input-group mb-3">
           <input type="text" class="form-control" placeholder="Username" name="username">
           <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-user-md"></span>
+            <div class="input-group-text bg-info">
+              <span class="fas fa-user-md text-white"></span>
             </div>
           </div>
         </div>
         <div class="input-group mb-3">
           <input type="password" class="form-control" placeholder="Password" name="password">
           <div class="input-group-append">
-            <div class="input-group-text">
-              <span class="fas fa-lock"></span>
+            <div class="input-group-text bg-info">
+              <span class="fas fa-lock text-white"></span>
             </div>
           </div>
         </div>
-        <div class="social-auth-links text-center mt-2 mb-3">
-          <button type="submit" class="btn btn-primary btn-block" name="submit">Sign In</button>
+        <div class="row">
+          <div class="col-12">
+            <button type="submit" class="btn btn-info btn-block" name="submit">Sign In</button>
+          </div>
         </div>
       </form>
     </div>
-    <!-- /.card-body -->
   </div>
-  <!-- /.card -->
 </div>
-<!-- /.login-box -->
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
