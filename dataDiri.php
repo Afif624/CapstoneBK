@@ -15,7 +15,7 @@ if (isset($_POST['save'])){
   $no_hp_baru = $_POST['newNoHP'];
   $poli_baru = $_POST['newPoli'];
     
-  $id_baru = $_SESSION['id'];
+  $id_baru = $_SESSION['id-dokter'];
   $queri1 = mysqli_query($mysqli, "UPDATE dokter SET 
       nama='$nama_baru',
       username='$username_baru',
@@ -23,6 +23,7 @@ if (isset($_POST['save'])){
       alamat='$alamat_baru',
       no_hp='$no_hp_baru',
       id_poli='$poli_baru' WHERE id='$id_baru'");
+  $_SESSION['dokter'] = $nama_baru;
   echo "<script>alert('Selamat, Anda berhasil merubah data Dokter Anda!');
       window.location.href = 'dataDiri.php';
           </script>";
@@ -91,7 +92,7 @@ if (isset($_POST['save'])){
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Dokter</a>
+          <a href="#" class="d-block">Dokter <?php echo $_SESSION['dokter']?></a>
         </div>
       </div>
 
@@ -176,8 +177,8 @@ if (isset($_POST['save'])){
                 $alamat='';
                 $no_hp='';
                 $poli='';
-                if (isset($_SESSION['id'])){
-                  $id=$_SESSION['id'];
+                if (isset($_SESSION['id-dokter'])){
+                  $id=$_SESSION['id-dokter'];
                   $queri4 = mysqli_query($mysqli, 
                       "SELECT dokter.*, poli.nama_poli as poli FROM dokter
                       JOIN poli ON poli.id = dokter.id_poli
@@ -199,7 +200,7 @@ if (isset($_POST['save'])){
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Nama" 
-                      name="newNama" value="<?php echo $nama?>">
+                      name="newNama" value="<?php echo $nama?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -211,7 +212,7 @@ if (isset($_POST['save'])){
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Username" 
-                      name="newUsername" value="<?php echo $username?>">
+                      name="newUsername" value="<?php echo $username?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -223,7 +224,7 @@ if (isset($_POST['save'])){
 
                   <div class="input-group">
                     <input type="password" class="form-control" placeholder="Masukkan Password" 
-                      name="newPassword" value="<?php echo $password?>">
+                      name="newPassword" value="<?php echo $password?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -235,7 +236,7 @@ if (isset($_POST['save'])){
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Alamat" 
-                      name="newAlamat" value="<?php echo $alamat?>">
+                      name="newAlamat" value="<?php echo $alamat?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -250,7 +251,7 @@ if (isset($_POST['save'])){
                       <span class="input-group-text"><i class="fas fa-phone"></i></span>
                     </div>
                     <input type="text" class="form-control" placeholder="Masukkan Nomor HP" data-inputmask='"mask": "9999-9999-9999"' data-mask 
-                      name="newNoHP" value="<?php echo $no_hp?>">
+                      name="newNoHP" value="<?php echo $no_hp?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -283,7 +284,7 @@ if (isset($_POST['save'])){
               <!-- /.card-body -->
 
               <div class="card-footer">
-                <button type="submit" class="btn btn-primary" name="save">Submit</button>
+                <button type="submit" class="btn btn-primary" name="save">Save Changes</button>
               </div>
               <!-- /.card -->
             </form> 

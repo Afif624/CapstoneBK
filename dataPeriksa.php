@@ -70,7 +70,7 @@ if (!isset($_SESSION['dokter'])) {
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Dokter</a>
+          <a href="#" class="d-block">Dokter <?php echo $_SESSION['dokter']?></a>
         </div>
       </div>
 
@@ -167,7 +167,7 @@ if (!isset($_SESSION['dokter'])) {
                   <tbody>
                   <?php 
                   $i= 1;
-                  $iddokter= $_SESSION['id'];
+                  $iddokter= $_SESSION['id-dokter'];
                   $queriPeriksa = mysqli_query($mysqli, 
                     "SELECT daftar_poli.id as idi, daftar_poli.keluhan, daftar_poli.no_antrian, daftar_poli.pemeriksaan,jadwal_periksa.*,pasien.nama as pasien FROM daftar_poli 
                     JOIN jadwal_periksa ON jadwal_periksa.id=daftar_poli.id_jadwal
@@ -224,7 +224,7 @@ if (!isset($_SESSION['dokter'])) {
 
 <?php 
 $i= 1;
-$iddokter= $_SESSION['id'];
+$iddokter= $_SESSION['id-dokter'];
 $queriPeriksa = mysqli_query($mysqli, 
   "SELECT daftar_poli.id as idi, daftar_poli.keluhan, daftar_poli.no_antrian, daftar_poli.pemeriksaan,jadwal_periksa.*,pasien.nama as pasien FROM daftar_poli 
   JOIN jadwal_periksa ON jadwal_periksa.id=daftar_poli.id_jadwal
@@ -283,7 +283,7 @@ while ($row = mysqli_fetch_array($queriPeriksa)){
 
             <div class="input-group">
               <input type="text" class="form-control" placeholder="Masukkan Catatan"
-                name="newCatatan">
+                name="newCatatan" required>
             </div>
             <!-- /.input group -->
           </div>
@@ -294,7 +294,7 @@ while ($row = mysqli_fetch_array($queriPeriksa)){
             <label>Obat:</label>
 
             <div class="input-group">
-              <select class="custom-select rounded-0" id="exampleSelectRounded0<?php echo $row['idi']; ?>" name="newIdObat[]" multiple="multiple">
+              <select class="custom-select rounded-0" id="exampleSelectRounded0<?php echo $row['idi']; ?>" name="newIdObat[]" multiple="multiple" required>
                 <?php 
                 $queriObat=mysqli_query($mysqli, "SELECT * FROM obat ORDER BY nama_obat ASC");
                 while ($rowObat=mysqli_fetch_array($queriObat)){?>

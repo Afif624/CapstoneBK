@@ -8,26 +8,66 @@ if (!isset($_SESSION['dokter'])) {
 }
 
 if (isset($_POST['save'])){
-  $iddokter= $_SESSION['id'];
+  $iddokter= $_SESSION['id-dokter'];
   $hari_baru = $_POST['newHari'];
   $jammulai_baru = $_POST['newJamMulai'];
   $jamselesai_baru = $_POST['newJamSelesai'];
-  if (!empty($_POST['id'])){
-    $id_baru = $_POST['id'];
-    $queri1 = mysqli_query($mysqli, "UPDATE jadwal_periksa SET 
-        hari='$hari_baru',
-        jam_mulai='$jammulai_baru',
-        jam_selesai='$jamselesai_baru' WHERE id='$id_baru'");
-    echo "<script>alert('Selamat, Anda berhasil merubah data Jadwal Anda!');
-        window.location.href = 'dataJadwal.php';
-            </script>";
+
+  $queriPoli = mysqli_query($mysqli, "SELECT poli.id FROM poli
+    JOIN dokter ON dokter.id_poli=poli.id
+    WHERE dokter.id='$iddokter'");
+  $rowPoli = mysqli_fetch_assoc($queriPoli);
+  $poli = $rowPoli['id'];
+
+  $existing_jadwal = mysqli_query($mysqli, "SELECT hari, jam_mulai, jam_selesai FROM jadwal_periksa
+    JOIN dokter ON dokter.id=jadwal_periksa.id_dokter
+    WHERE dokter.id_poli='$poli' AND hari='$hari_baru'");
+
+  $new_jam_mulai = strtotime($jammulai_baru);
+  $new_jam_selesai = strtotime($jamselesai_baru);
+  $is_conflict = false;
+  while ($row = mysqli_fetch_assoc($existing_jadwal)) {
+    $existing_jam_mulai = strtotime($row['jam_mulai']);
+    $existing_jam_selesai = strtotime($row['jam_selesai']);
+
+    if (
+        ($existing_jam_mulai < $new_jam_mulai  && $new_jam_mulai < $existing_jam_selesai) ||
+        ($existing_jam_mulai < $new_jam_selesai && $new_jam_selesai < $existing_jam_selesai) ||
+        ($new_jam_mulai < $existing_jam_mulai && $existing_jam_selesai < $new_jam_selesai )
+    ) {
+        $is_conflict = true;
+        break;
+    }
+  }
+
+  if ($is_conflict) {
+      echo "<script>alert('Maaf, Jadwal baru bertabrakan dengan Jadwal yang sudah ada. Silakan pilih Jadwal yang lain.');
+          window.location.href = 'dataJadwal.php';
+          </script>";
   } else {
-    $queri2 = mysqli_query($mysqli, "INSERT INTO 
-        jadwal_periksa(id_dokter,hari,jam_mulai,jam_selesai) VALUES(
-            '$iddokter','$hari_baru','$jammulai_baru','$jamselesai_baru')");
-    echo "<script>alert('Selamat, Anda berhasil menambah data Jadwal Anda!');
-        window.location.href = 'dataJadwal.php';
-            </script>";
+    if ($new_jam_mulai>$new_jam_selesai){
+      echo "<script>alert('Jam Mulai harus diawal dan Jam Selesai harus diakhir!');
+          window.location.href = 'dataJadwal.php';
+              </script>";
+    } else{
+      if (!empty($_POST['id'])){
+        $id_baru = $_POST['id'];
+        $queri1 = mysqli_query($mysqli, "UPDATE jadwal_periksa SET 
+            hari='$hari_baru',
+            jam_mulai='$jammulai_baru',
+            jam_selesai='$jamselesai_baru' WHERE id='$id_baru'");
+        echo "<script>alert('Selamat, Anda berhasil merubah data Jadwal Anda!');
+            window.location.href = 'dataJadwal.php';
+                </script>";
+      } else {
+        $queri2 = mysqli_query($mysqli, "INSERT INTO 
+            jadwal_periksa(id_dokter,hari,jam_mulai,jam_selesai) VALUES(
+                '$iddokter','$hari_baru','$jammulai_baru','$jamselesai_baru')");
+        echo "<script>alert('Selamat, Anda berhasil menambah data Jadwal Anda!');
+            window.location.href = 'dataJadwal.php';
+                </script>";
+      }
+    }
   }
 }
 
@@ -40,6 +80,10 @@ if (isset($_GET['aksi'])) {
     echo "<script>alert('Selamat, Anda berhasil menghapus data Jadwal Anda!');
         window.location.href = 'dataJadwal.php';
             </script>";
+  } else if ($aksi == 'noubah') {
+    echo "<script>alert('Maaf, Anda tidak dapat mengupdate jadwal pada Hari H.');
+        window.location.href = 'dataJadwal.php';
+        </script>";
   }
 }
 ?>
@@ -106,7 +150,7 @@ if (isset($_GET['aksi'])) {
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Dokter</a>
+          <a href="#" class="d-block">Dokter <?php echo $_SESSION['dokter']?></a>
         </div>
       </div>
 
@@ -188,7 +232,7 @@ if (isset($_GET['aksi'])) {
               </div>
               <div class="card-body">
                 <?php 
-                $iddokter= $_SESSION['id'];
+                $iddokter= $_SESSION['id-dokter'];
                 $hari='';
                 $jammulai='';
                 $jamselesai='';
@@ -233,7 +277,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="time" class="form-control"
-                      name="newJamMulai" value="<?php echo $jammulai?>">
+                      name="newJamMulai" value="<?php echo $jammulai?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -245,7 +289,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="time" class="form-control" 
-                      name="newJamSelesai" value="<?php echo $jamselesai?>">
+                      name="newJamSelesai" value="<?php echo $jamselesai?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -281,6 +325,29 @@ if (isset($_GET['aksi'])) {
                   $i= 1;
                   $queri5 = mysqli_query($mysqli, 
                     "SELECT * FROM jadwal_periksa WHERE id_dokter=$iddokter");
+              
+                  function translateDayToIndonesian($day) {
+                    switch ($day) {
+                        case "Mon":
+                            return "Senin";
+                        case "Tues":
+                            return "Selasa";
+                        case "Wednes":
+                            return "Rabu";
+                        case "Thurs":
+                            return "Kamis";
+                        case "Fri":
+                            return "Jumat";
+                        case "Satur":
+                            return "Sabtu";
+                        case "Sun":
+                            return "Minggu";
+                        default:
+                            return $day;
+                    }
+                  }
+                  $hari_ini = date("D");
+                  $hari_ini = translateDayToIndonesian($hari_ini);
                   while ($row = mysqli_fetch_array($queri5)){?>
                     <tr>
                       <td class="text-center" scope="row"><?php echo $i++ ?></td>
@@ -288,8 +355,15 @@ if (isset($_GET['aksi'])) {
                       <td><?php echo $row['jam_mulai']?></td>
                       <td><?php echo $row['jam_selesai']?></td>
                       <td>
+                        <?php 
+                        if ($row['hari']==$hari_ini){?>
+                          <a class="btn btn-info rounded-pill px-3" 
+                              href="dataJadwal.php?id=<?php echo $row['id']?>
+                                  &aksi=noubah">Ubah</a>
+                        <?php } else{?>
                           <a class="btn btn-info rounded-pill px-3" 
                               href="dataJadwal.php?id=<?php echo $row['id'] ?>">Ubah</a>
+                        <?php }?>
                           <a class="btn btn-danger rounded-pill px-3" 
                               href="dataJadwal.php?id=<?php echo $row['id']?>
                                   &aksi=hapus">Hapus</a>

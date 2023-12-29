@@ -70,7 +70,7 @@ if (!isset($_SESSION['dokter'])) {
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Dokter</a>
+          <a href="#" class="d-block">Dokter <?php echo $_SESSION['dokter']?></a>
         </div>
       </div>
 
@@ -168,10 +168,10 @@ if (!isset($_SESSION['dokter'])) {
                   <tbody>
                   <?php 
                   $i= 1;
-                  $iddokter= $_SESSION['id'];
+                  $iddokter= $_SESSION['id-dokter'];
                   $queri5 = mysqli_query($mysqli, 
                     "SELECT pasien.nama as pasien, daftar_poli.keluhan, periksa.*, 
-                    GROUP_CONCAT(obat.nama_obat) as obat, GROUP_CONCAT(obat.harga) as harga FROM daftar_poli 
+                    GROUP_CONCAT(obat.nama_obat) as obat FROM daftar_poli 
                     JOIN jadwal_periksa ON jadwal_periksa.id=daftar_poli.id_jadwal 
                     JOIN pasien ON pasien.id=daftar_poli.id_pasien 
                     JOIN periksa ON daftar_poli.id=periksa.id_daftar_poli 
@@ -180,7 +180,6 @@ if (!isset($_SESSION['dokter'])) {
                     WHERE jadwal_periksa.id_dokter=$iddokter
                     GROUP BY periksa.id");
                   while ($row = mysqli_fetch_array($queri5)){
-                    $total = $row['biaya_periksa'] + array_sum(explode(',', $row['harga']));
                     $obatList = array_unique(explode(',', $row['obat']));?>
                     <tr>
                       <td class="text-center" scope="row"><?php echo $i++ ?></td>
@@ -193,7 +192,7 @@ if (!isset($_SESSION['dokter'])) {
                               echo " " . $obat . "<br>";
                           } ?>
                       </td>
-                      <td class="text-center"><?php echo $total ?></td>
+                      <td class="text-center"><?php echo $row['biaya_periksa'] ?></td>
                     </tr>
                   <?php }?>
                   </tbody>

@@ -204,7 +204,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Nama" 
-                      name="newNamaPoli" value="<?php echo $nama?>">
+                      name="newNamaPoli" value="<?php echo $nama?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -216,7 +216,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Keterangan" 
-                      name="newKeterangan" value="<?php echo $keterangan?>">
+                      name="newKeterangan" value="<?php echo $keterangan?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>

@@ -209,7 +209,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Nama" 
-                      name="newNamaObat" value="<?php echo $nama?>">
+                      name="newNamaObat" value="<?php echo $nama?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -221,7 +221,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Kemasan" 
-                      name="newKemasan" value="<?php echo $kemasan?>">
+                      name="newKemasan" value="<?php echo $kemasan?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -236,7 +236,7 @@ if (isset($_GET['aksi'])) {
                       <span class="input-group-text"><i class="fas fa-money-check-alt"></i></span>
                     </div>
                     <input type="number" class="form-control" placeholder="Masukkan Harga" 
-                      name="newHarga" value="<?php echo $harga?>">
+                      name="newHarga" value="<?php echo $harga?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>

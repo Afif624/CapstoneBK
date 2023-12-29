@@ -69,7 +69,7 @@ if (!isset($_SESSION['pasien'])) {
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Pasien</a>
+          <a href="#" class="d-block">Pasien <?php echo $_SESSION['pasien']?></a>
         </div>
       </div>
 

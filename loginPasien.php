@@ -14,7 +14,7 @@ if (isset($_POST['submit'])) {
       if ($result2->num_rows > 0) {
           $row = mysqli_fetch_assoc($result1);
           $_SESSION['pasien'] = $row['nama'];
-          $_SESSION['id'] = $row['id'];
+          $_SESSION['id-pasien'] = $row['id'];
           echo "<script>alert('Selamat, Anda berhasil Login!');
               window.location.href = 'pasien.php';
                   </script>";
@@ -54,7 +54,7 @@ if (isset($_POST['submit'])) {
 
       <form action="" method="post">
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Username" name="username">
+          <input type="text" class="form-control" placeholder="Username" name="username" required>
           <div class="input-group-append">
             <div class="input-group-text bg-primary">
               <span class="fas fa-user-md text-white"></span>
@@ -62,7 +62,7 @@ if (isset($_POST['submit'])) {
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Password" name="password">
+          <input type="password" class="form-control" placeholder="Password" name="password" required>
           <div class="input-group-append">
             <div class="input-group-text bg-primary">
               <span class="fas fa-lock text-white"></span>

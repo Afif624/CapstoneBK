@@ -8,7 +8,7 @@ if (!isset($_SESSION['pasien'])) {
 }
 
 if (isset($_POST['save'])){
-  $idpasien= $_SESSION['id'];
+  $idpasien= $_SESSION['id-pasien'];
   $idjadwal_baru = $_POST['newIDJadwal'];
   $keluhan_baru = $_POST['newKeluhan'];
 
@@ -49,7 +49,7 @@ if (isset($_GET['aksi'])) {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Data-Jadwal | Dokter Poliklinik</title>
+  <title>Pendaftaran-Poli | Pasien Poliklinik</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -107,7 +107,7 @@ if (isset($_GET['aksi'])) {
           <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info">
-          <a href="#" class="d-block">Dokter</a>
+          <a href="#" class="d-block">Pasien <?php echo $_SESSION['pasien']?></a>
         </div>
       </div>
 
@@ -171,7 +171,7 @@ if (isset($_GET['aksi'])) {
               </div>
               <div class="card-body">
                 <?php 
-                $idpasien= $_SESSION['id'];
+                $idpasien= $_SESSION['id-pasien'];
                 $jadwal='';
                 $keluhan='';
                 if (isset($_GET['id'])){
@@ -215,7 +215,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Keluhan"
-                      name="newKeluhan" value="<?php echo $keluhan?>">
+                      name="newKeluhan" value="<?php echo $keluhan?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>

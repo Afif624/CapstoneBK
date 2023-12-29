@@ -222,7 +222,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Nama" 
-                      name="newNama" value="<?php echo $nama?>">
+                      name="newNama" value="<?php echo $nama?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -234,7 +234,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Username" 
-                      name="newUsername" value="<?php echo $username?>">
+                      name="newUsername" value="<?php echo $username?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -246,7 +246,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="password" class="form-control" placeholder="Masukkan Password" 
-                      name="newPassword" value="<?php echo $password?>">
+                      name="newPassword" value="<?php echo $password?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -258,7 +258,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Alamat" 
-                      name="newAlamat" value="<?php echo $alamat?>">
+                      name="newAlamat" value="<?php echo $alamat?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -273,7 +273,7 @@ if (isset($_GET['aksi'])) {
                       <span class="input-group-text"><i class="fas fa-phone"></i></span>
                     </div>
                     <input type="text" class="form-control" placeholder="Masukkan Nomor HP" data-inputmask='"mask": "9999-9999-9999"' data-mask 
-                      name="newNoHP" value="<?php echo $no_hp?>">
+                      name="newNoHP" value="<?php echo $no_hp?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>

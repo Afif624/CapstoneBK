@@ -14,32 +14,40 @@ if (isset($_POST['save'])){
   $alamat_baru = $_POST['newAlamat'];
   $no_ktp_baru = $_POST['newNoKTP'];
   $no_hp_baru = $_POST['newNoHP'];
-  if (!empty($_POST['id'])){
-    $id_baru = $_POST['id'];
-    $queri1 = mysqli_query($mysqli, "UPDATE pasien SET 
-        nama='$nama_baru',
-        username='$username_baru',
-        password='$password_baru', 
-        alamat='$alamat_baru',
-        no_ktp='$no_ktp_baru',
-        no_hp='$no_hp_baru' WHERE id='$id_baru'");
-    echo "<script>alert('Selamat, Anda berhasil merubah data Pasien!');
-        window.location.href = 'dataPasien.php';
+
+  $queri0 = mysqli_query($mysqli, "SELECT * FROM pasien WHERE no_ktp='$no_ktp_baru'");
+  if ($queri0->num_rows > 0) {
+    echo "<script>alert('Maaf tapi No KTP sudah teregistrasi!');
+        window.location.href = 'registerPasien.php';
             </script>";
-  } else {
-    $queri2 = mysqli_query($mysqli, "INSERT INTO 
-        pasien(nama,username,password,alamat,no_ktp,no_hp) VALUES(
-            '$nama_baru','$username_baru','$password_baru','$alamat_baru','$no_ktp_baru','$no_hp_baru')");
-    if($queri2){
-        $lastid = $mysqli->insert_id;
-        $tahun_sekarang = date("Y");
-        $bulan_sekarang = date("m");
-        $no_rm_baru = $tahun_sekarang . $bulan_sekarang . "-" . $lastid;
-        $queri1 = mysqli_query($mysqli, "UPDATE pasien SET 
-            no_rm='$no_rm_baru' WHERE id='$lastid'");
-        echo "<script>alert('Selamat, Anda berhasil menambah data Pasien!');
-            window.location.href = 'dataPasien.php';
-                </script>";
+  } else{
+    if (!empty($_POST['id'])){
+      $id_baru = $_POST['id'];
+      $queri1 = mysqli_query($mysqli, "UPDATE pasien SET 
+          nama='$nama_baru',
+          username='$username_baru',
+          password='$password_baru', 
+          alamat='$alamat_baru',
+          no_ktp='$no_ktp_baru',
+          no_hp='$no_hp_baru' WHERE id='$id_baru'");
+      echo "<script>alert('Selamat, Anda berhasil merubah data Pasien!');
+          window.location.href = 'dataPasien.php';
+              </script>";
+    } else {
+      $queri2 = mysqli_query($mysqli, "INSERT INTO 
+          pasien(nama,username,password,alamat,no_ktp,no_hp) VALUES(
+              '$nama_baru','$username_baru','$password_baru','$alamat_baru','$no_ktp_baru','$no_hp_baru')");
+      if($queri2){
+          $lastid = $mysqli->insert_id;
+          $tahun_sekarang = date("Y");
+          $bulan_sekarang = date("m");
+          $no_rm_baru = $tahun_sekarang . $bulan_sekarang . "-" . $lastid;
+          $queri1 = mysqli_query($mysqli, "UPDATE pasien SET 
+              no_rm='$no_rm_baru' WHERE id='$lastid'");
+          echo "<script>alert('Selamat, Anda berhasil menambah data Pasien!');
+              window.location.href = 'dataPasien.php';
+                  </script>";
+      }
     }
   }
 }
@@ -229,7 +237,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Nama" 
-                      name="newNama" value="<?php echo $nama?>">
+                      name="newNama" value="<?php echo $nama?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -241,7 +249,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Username" 
-                      name="newUsername" value="<?php echo $username?>">
+                      name="newUsername" value="<?php echo $username?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -253,7 +261,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="password" class="form-control" placeholder="Masukkan Password" 
-                      name="newPassword" value="<?php echo $password?>">
+                      name="newPassword" value="<?php echo $password?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -265,7 +273,7 @@ if (isset($_GET['aksi'])) {
 
                   <div class="input-group">
                     <input type="text" class="form-control" placeholder="Masukkan Alamat" 
-                      name="newAlamat" value="<?php echo $alamat?>">
+                      name="newAlamat" value="<?php echo $alamat?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -280,7 +288,7 @@ if (isset($_GET['aksi'])) {
                       <span class="input-group-text"><i class="fas fa-id-card-alt"></i></span>
                     </div>
                     <input type="text" class="form-control" placeholder="Masukkan Nomor KTP" data-inputmask='"mask": "99-99-99-999999-9999"' data-mask 
-                      name="newNoKTP" value="<?php echo $no_ktp?>">
+                      name="newNoKTP" value="<?php echo $no_ktp?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -295,7 +303,7 @@ if (isset($_GET['aksi'])) {
                       <span class="input-group-text"><i class="fas fa-phone"></i></span>
                     </div>
                     <input type="text" class="form-control" placeholder="Masukkan Nomor HP" data-inputmask='"mask": "9999-9999-9999"' data-mask 
-                      name="newNoHP" value="<?php echo $no_hp?>">
+                      name="newNoHP" value="<?php echo $no_hp?>" required>
                   </div>
                   <!-- /.input group -->
                 </div>
