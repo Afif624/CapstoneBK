@@ -2,6 +2,10 @@
 require 'koneksi.php';
 error_reporting(0);
 session_start();
+
+if (!isset($_SESSION['admin'])) {
+  header("Location: loginDokter.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -7,6 +7,7 @@ if (isset($_POST['submit'])) {
   $username = $_POST['username'];
   $password = $_POST['password'];
   if (($username == 'admin') && ($password == 'admin')){
+    $_SESSION['admin'] = $username;
     echo "<script>alert('Selamat, Anda berhasil Login!');
         window.location.href = 'admin.php';
             </script>";
@@ -18,7 +19,7 @@ if (isset($_POST['submit'])) {
         $result2 = mysqli_query($mysqli, $sql2);
         if ($result2->num_rows > 0) {
             $row = mysqli_fetch_assoc($result1);
-            $_SESSION['nama'] = $row['nama'];
+            $_SESSION['dokter'] = $row['nama'];
             $_SESSION['id'] = $row['id'];
             echo "<script>alert('Selamat, Anda berhasil Login!');
                 window.location.href = 'dokter.php';

@@ -3,6 +3,10 @@ require 'koneksi.php';
 error_reporting(0);
 session_start();
 
+if (!isset($_SESSION['admin'])) {
+  header("Location: loginDokter.php");
+}
+
 if (isset($_POST['save'])){
   $namaobat_baru = $_POST['newNamaObat'];
   $kemasan_baru = $_POST['newKemasan'];

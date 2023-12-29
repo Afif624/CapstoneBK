@@ -13,7 +13,7 @@ if (isset($_POST['submit'])) {
       $result2 = mysqli_query($mysqli, $sql2);
       if ($result2->num_rows > 0) {
           $row = mysqli_fetch_assoc($result1);
-          $_SESSION['nama'] = $row['nama'];
+          $_SESSION['pasien'] = $row['nama'];
           $_SESSION['id'] = $row['id'];
           echo "<script>alert('Selamat, Anda berhasil Login!');
               window.location.href = 'pasien.php';

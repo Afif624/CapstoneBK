@@ -2,6 +2,10 @@
 require 'koneksi.php';
 error_reporting(0);
 session_start();
+
+if (!isset($_SESSION['pasien'])) {
+  header("Location: loginPasien.php");
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">

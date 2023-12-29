@@ -3,6 +3,10 @@ require 'koneksi.php';
 error_reporting(0);
 session_start();
 
+if (!isset($_SESSION['pasien'])) {
+  header("Location: loginPasien.php");
+}
+
 if (isset($_POST['save'])){
   $idpasien= $_SESSION['id'];
   $idjadwal_baru = $_POST['newIDJadwal'];
