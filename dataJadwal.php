@@ -328,25 +328,25 @@ if (isset($_GET['aksi'])) {
               
                   function translateDayToIndonesian($day) {
                     switch ($day) {
-                        case "Mon":
-                            return "Senin";
-                        case "Tues":
-                            return "Selasa";
-                        case "Wednes":
-                            return "Rabu";
-                        case "Thurs":
-                            return "Kamis";
-                        case "Fri":
-                            return "Jumat";
-                        case "Satur":
-                            return "Sabtu";
-                        case "Sun":
-                            return "Minggu";
-                        default:
-                            return $day;
+                      case "Monday":
+                          return "Senin";
+                      case "Tuesday":
+                          return "Selasa";
+                      case "Wednesday":
+                          return "Rabu";
+                      case "Thursday":
+                          return "Kamis";
+                      case "Friday":
+                          return "Jumat";
+                      case "Saturday":
+                          return "Sabtu";
+                      case "Sunday":
+                          return "Minggu";
+                      default:
+                          return $day;
                     }
                   }
-                  $hari_ini = date("D");
+                  $hari_ini = date("l");
                   $hari_ini = translateDayToIndonesian($hari_ini);
                   while ($row = mysqli_fetch_array($queri5)){?>
                     <tr>

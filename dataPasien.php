@@ -18,7 +18,7 @@ if (isset($_POST['save'])){
   $queri0 = mysqli_query($mysqli, "SELECT * FROM pasien WHERE no_ktp='$no_ktp_baru'");
   if ($queri0->num_rows > 0) {
     echo "<script>alert('Maaf tapi No KTP sudah teregistrasi!');
-        window.location.href = 'registerPasien.php';
+        window.location.href = 'dataPasien.php';
             </script>";
   } else{
     if (!empty($_POST['id'])){
