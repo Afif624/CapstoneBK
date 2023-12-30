@@ -189,22 +189,25 @@ if (isset($_GET['aksi'])) {
                 }?>
                 <!-- phone mask -->
                 <div class="form-group">
-                  <label>Jadwal Dokter:</label>
-
+                  <label>Pilih Poli:</label>
                   <div class="input-group">
-                    <select class="custom-select rounded-0" id="exampleSelectRounded0" name="newIDJadwal">
-                      <?php 
-                      $select='';
-                      $queriJadwal=mysqli_query($mysqli, "SELECT jadwal_periksa.*,dokter.nama as nama FROM jadwal_periksa
-                        JOIN dokter ON dokter.id=jadwal_periksa.id_dokter
-                        ORDER BY nama,hari ASC");
-                      while ($rowJadwal=mysqli_fetch_array($queriJadwal)){
-                          $select = ($rowJadwal['id'] == $jadwal) ? 'selected' : '';?>
-                          <option value="<?php echo $rowJadwal['id'] ?>" <?php echo $select?>>
-                              <?php echo $rowJadwal['nama']." | ".$rowJadwal['hari'].", ".$rowJadwal['jam_mulai']."-".$rowJadwal['jam_selesai']?>
-                          </option>
-                      <?php }?>
-                    </select>
+                      <select class="custom-select rounded-0" id="selectPoli" name="selectedPoli">
+                          <?php
+                          $queriPoli = mysqli_query($mysqli, "SELECT * FROM poli ORDER BY nama_poli ASC");
+                          while ($rowPoli = mysqli_fetch_array($queriPoli)) {
+                              echo '<option value="' . $rowPoli['id'] . '">' . $rowPoli['nama_poli'] . '</option>';
+                          }
+                          ?>
+                      </select>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label>Jadwal Dokter:</label>
+                  <div class="input-group">
+                      <select class="custom-select rounded-0" id="exampleSelectRounded0" name="newIDJadwal">
+                          <!-- Option untuk dokter akan diatur melalui JavaScript -->
+                      </select>
                   </div>
                   <!-- /.input group -->
                 </div>
@@ -347,8 +350,45 @@ if (isset($_GET['aksi'])) {
       "responsive": true, "lengthChange": false, "autoWidth": false,
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
     }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    
   });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Mengecek apakah ada poli yang sudah dipilih pada saat pertama kali loading
+        var selectedPoli = document.getElementById('selectPoli').value;
+
+        if (selectedPoli) {
+            populateDokterDropdown(selectedPoli);
+        }
+
+        document.getElementById('selectPoli').addEventListener('change', function () {
+            var selectedPoli = this.value;
+            populateDokterDropdown(selectedPoli);
+        });
+
+        function populateDokterDropdown(selectedPoli) {
+            var dokterDropdown = document.getElementById('exampleSelectRounded0');
+
+            // Menghapus opsi yang ada
+            dokterDropdown.innerHTML = '';
+
+            // Mengambil dokter berdasarkan poli yang dipilih
+            <?php
+            $queriDokter = mysqli_query($mysqli, "SELECT jadwal_periksa.id, dokter.nama, dokter.id_poli, jadwal_periksa.hari, jadwal_periksa.jam_mulai, jadwal_periksa.jam_selesai FROM dokter
+                JOIN jadwal_periksa ON dokter.id = jadwal_periksa.id_dokter
+                GROUP BY dokter.id, dokter.nama, dokter.id_poli, jadwal_periksa.hari, jadwal_periksa.jam_mulai, jadwal_periksa.jam_selesai ORDER BY dokter.nama ASC");
+
+            while ($rowDokter = mysqli_fetch_array($queriDokter)) {
+                echo 'if (' . $rowDokter['id_poli'] . ' == selectedPoli) {';
+                echo 'var option = document.createElement("option");';
+                echo 'option.value = "' . $rowDokter['id'] . '";';
+                echo 'option.text = "' . $rowDokter['nama'] . ' - ' . $rowDokter['hari'] . ', ' . $rowDokter['jam_mulai'] . '-' . $rowDokter['jam_selesai'] . '";';
+                echo 'dokterDropdown.add(option);';
+                echo '}';
+            }
+            ?>
+        }
+    });
 </script>
 </body>
 </html>

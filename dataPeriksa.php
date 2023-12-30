@@ -294,17 +294,23 @@ while ($row = mysqli_fetch_array($queriPeriksa)){
             <label>Obat:</label>
 
             <div class="input-group">
-              <select class="custom-select rounded-0" id="exampleSelectRounded0<?php echo $row['idi']; ?>" name="newIdObat[]" multiple="multiple" required>
+              <select class="custom-select rounded-0" id="exampleSelectRounded0<?php echo $row['idi']; ?>" name="newIdObat[]" multiple="multiple" onchange="updateTotalHarga(<?php echo $row['idi']; ?>)" required>
                 <?php 
                 $queriObat=mysqli_query($mysqli, "SELECT * FROM obat ORDER BY nama_obat ASC");
                 while ($rowObat=mysqli_fetch_array($queriObat)){?>
-                    <option value="<?php echo $rowObat['id'] ?>" <?php echo $select?>>
+                    <option value="<?php echo $rowObat['id'] ?>" data-harga="<?php echo $rowObat['harga'] ?>">
                         <?php echo $rowObat['nama_obat']?>
                     </option>
                 <?php }?>
               </select>
             </div>
             <!-- /.input group -->
+          </div>
+          <div class="form-group">
+            <label>Biaya Periksa:</label>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Total Harga" name="totalHarga" id="totalHarga<?php echo $row['idi']; ?>" value="150000" disabled>
+            </div>
           </div>
         </div>
         <div class="modal-footer justify-content-between">
@@ -375,6 +381,22 @@ while ($row = mysqli_fetch_array($queriPeriksa)){
       placeholder: "Silahkan Pilih Obat"
     });
   });
+</script>
+<script>
+  function updateTotalHarga(id) {
+      var originalHarga = 150000;
+      var totalHarga = originalHarga;
+      var selectedObat = document.getElementById('exampleSelectRounded0' + id);
+      for (var i = 0; i < selectedObat.options.length; i++) {
+          if (selectedObat.options[i].selected) {
+              // Assuming harga is stored as data attribute in the option
+              var harga = parseFloat(selectedObat.options[i].getAttribute('data-harga'));
+              totalHarga += harga;
+          }
+      }
+      // Update the value of the disabled input field for total harga
+      document.getElementById('totalHarga' + id).value = totalHarga;
+  }
 </script>
 </body>
 </html>
