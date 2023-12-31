@@ -121,6 +121,12 @@ if (!isset($_SESSION['dokter'])) {
               <p>Data Riwayat Pasien</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="logout.php" class="nav-link">
+              <i class="nav-icon fas fa-sign-out-alt"></i>
+              <p>Logout</p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -178,7 +184,7 @@ if (!isset($_SESSION['dokter'])) {
                     <tr>
                       <td class="text-center" scope="row"><?php echo $i++ ?></td>
                       <td><?php echo $row['pasien']?></td>
-                      <td><?php echo $row['hari'].",".$row['jam_mulai']."-".$row['jam_selesai']?></td>
+                      <td><?php echo $row['hari'].", ".$row['jam_mulai']."-".$row['jam_selesai']?></td>
                       <td><?php echo $row['keluhan']?></td>
                       <td><?php echo $row['no_antrian']?></td>
                       <td>
@@ -309,7 +315,7 @@ while ($row = mysqli_fetch_array($queriPeriksa)){
           <div class="form-group">
             <label>Biaya Periksa:</label>
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Total Harga" name="totalHarga" id="totalHarga<?php echo $row['idi']; ?>" value="150000" disabled>
+                <input type="text" class="form-control" placeholder="Total Harga" name="totalHarga" id="totalHarga<?php echo $row['idi']; ?>" value="Rp 150000" disabled>
             </div>
           </div>
         </div>
@@ -395,7 +401,7 @@ while ($row = mysqli_fetch_array($queriPeriksa)){
           }
       }
       // Update the value of the disabled input field for total harga
-      document.getElementById('totalHarga' + id).value = totalHarga;
+      document.getElementById('totalHarga' + id).value = "Rp " + totalHarga;
   }
 </script>
 </body>

@@ -121,6 +121,12 @@ if (!isset($_SESSION['dokter'])) {
               <p>Data Riwayat Pasien</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="logout.php" class="nav-link">
+              <i class="nav-icon fas fa-sign-out-alt"></i>
+              <p>Logout</p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -192,7 +198,7 @@ if (!isset($_SESSION['dokter'])) {
                               echo " " . $obat . "<br>";
                           } ?>
                       </td>
-                      <td class="text-center"><?php echo $row['biaya_periksa'] ?></td>
+                      <td class="text-center">Rp <?php echo $row['biaya_periksa'] ?></td>
                     </tr>
                   <?php }?>
                   </tbody>

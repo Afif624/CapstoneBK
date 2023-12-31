@@ -18,7 +18,8 @@ if (isset($_POST['save'])){
     $id_baru = $_POST['id'];
     $queri1 = mysqli_query($mysqli, "UPDATE daftar_poli SET 
         id_jadwal='$idjadwal_baru',
-        keluhan='$keluhan_baru' WHERE id='$id_baru'");
+        keluhan='$keluhan_baru', 
+        no_antrian='$nomorantrian_baru' WHERE id='$id_baru'");
     echo "<script>alert('Selamat, Anda berhasil merubah data Pendaftaran Poli Anda!');
         window.location.href = 'pendaftaranPoli.php';
             </script>";
@@ -140,6 +141,12 @@ if (isset($_GET['aksi'])) {
               <p>Pendaftaran Poli</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="logout.php" class="nav-link">
+              <i class="nav-icon fas fa-sign-out-alt"></i>
+              <p>Logout</p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -177,25 +184,42 @@ if (isset($_GET['aksi'])) {
                 if (isset($_GET['id'])){
                   $id=$_GET['id'];
                   $queri4 = mysqli_query($mysqli, 
-                      "SELECT daftar_poli.*,jadwal_periksa.* FROM daftar_poli
+                      "SELECT daftar_poli.*,jadwal_periksa.*,dokter.* FROM daftar_poli
                       JOIN jadwal_periksa ON jadwal_periksa.id=daftar_poli.id_jadwal
+                      JOIN dokter ON dokter.id=jadwal_periksa.id_dokter
                       WHERE daftar_poli.id=$id");
                   while ($row = mysqli_fetch_array($queri4)){
+                      $poli = $row['id_poli'];
                       $jadwal = $row['id_jadwal'];
                       $keluhan = $row['keluhan'];
                   }?>
                   <input type="hidden" name="id" value="<?php echo $id ?>">
                   <?php 
                 }?>
+
+                <div class="form-group">
+                  <label>No RM:</label>
+
+                  <div class="input-group">
+                    <?php 
+                    $queriRM=mysqli_query($mysqli, "SELECT no_rm FROM pasien WHERE id='$idpasien'");
+                    $rowRM=mysqli_fetch_array($queriRM)?>
+                    <input type="text" class="form-control" value="<?php echo $rowRM['no_rm']?>" disabled>
+                  </div>
+                  <!-- /.input group -->
+                </div>
+
                 <!-- phone mask -->
                 <div class="form-group">
                   <label>Pilih Poli:</label>
                   <div class="input-group">
                       <select class="custom-select rounded-0" id="selectPoli" name="selectedPoli">
                           <?php
+                          $selectPoli='';
                           $queriPoli = mysqli_query($mysqli, "SELECT * FROM poli ORDER BY nama_poli ASC");
                           while ($rowPoli = mysqli_fetch_array($queriPoli)) {
-                              echo '<option value="' . $rowPoli['id'] . '">' . $rowPoli['nama_poli'] . '</option>';
+                              $selectPoli = ($rowPoli['id'] == $poli) ? 'selected' : '';
+                              echo '<option value="' . $rowPoli['id'] . '" '.$selectPoli.'>' . $rowPoli['nama_poli'] . '</option>';
                           }
                           ?>
                       </select>
@@ -262,7 +286,7 @@ if (isset($_GET['aksi'])) {
                     <tr>
                       <td class="text-center" scope="row"><?php echo $i++ ?></td>
                       <td><?php echo $row['dokter']?></td>
-                      <td><?php echo $row['hari'].",".$row['jam_mulai']."-".$row['jam_selesai']?></td>
+                      <td><?php echo $row['hari'].", ".$row['jam_mulai']."-".$row['jam_selesai']?></td>
                       <td><?php echo $row['keluhan']?></td>
                       <td><?php echo $row['no_antrian']?></td>
                       <td>
@@ -377,12 +401,14 @@ if (isset($_GET['aksi'])) {
             $queriDokter = mysqli_query($mysqli, "SELECT jadwal_periksa.id, dokter.nama, dokter.id_poli, jadwal_periksa.hari, jadwal_periksa.jam_mulai, jadwal_periksa.jam_selesai FROM dokter
                 JOIN jadwal_periksa ON dokter.id = jadwal_periksa.id_dokter
                 GROUP BY dokter.id, dokter.nama, dokter.id_poli, jadwal_periksa.hari, jadwal_periksa.jam_mulai, jadwal_periksa.jam_selesai ORDER BY dokter.nama ASC");
-
+            $selectJadwal='';
             while ($rowDokter = mysqli_fetch_array($queriDokter)) {
                 echo 'if (' . $rowDokter['id_poli'] . ' == selectedPoli) {';
+                $selectJadwal = ($rowDokter['id'] == $jadwal) ? 'selected' : '';
                 echo 'var option = document.createElement("option");';
                 echo 'option.value = "' . $rowDokter['id'] . '";';
                 echo 'option.text = "' . $rowDokter['nama'] . ' - ' . $rowDokter['hari'] . ', ' . $rowDokter['jam_mulai'] . '-' . $rowDokter['jam_selesai'] . '";';
+                echo 'option.selected = "'.$selectJadwal.'";';
                 echo 'dokterDropdown.add(option);';
                 echo '}';
             }

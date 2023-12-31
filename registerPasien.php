@@ -55,7 +55,7 @@ if (isset($_POST['submit'])){
   <!-- /.login-logo -->
   <div class="card card-outline card-primary mt-5 mb-5">
     <div class="card-header text-center">
-      <a href="index2.html" class="h1"><b>Register</b>POLI</a>
+      <a href="index2.html" class="h1"><b>Register</b>PASIEN</a>
     </div>
     <div class="card-body">
       <p class="login-box-msg">Lengkapi Data untuk Register</p>
