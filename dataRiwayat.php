@@ -168,7 +168,7 @@ if (!isset($_SESSION['dokter'])) {
                     <th>Tanggal Periksa</th>
                     <th>Catatan</th>
                     <th>Obat-Obatan</th>
-                    <th>Total Biaya</th>
+                    <th>Biaya Periksa</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -184,7 +184,7 @@ if (!isset($_SESSION['dokter'])) {
                     JOIN detail_periksa ON periksa.id=detail_periksa.id_periksa 
                     JOIN obat ON obat.id=detail_periksa.id_obat 
                     WHERE jadwal_periksa.id_dokter=$iddokter
-                    GROUP BY periksa.id");
+                    GROUP BY hari,jam_mulai,no_antrian");
                   while ($row = mysqli_fetch_array($queri5)){
                     $obatList = array_unique(explode(',', $row['obat']));?>
                     <tr>
