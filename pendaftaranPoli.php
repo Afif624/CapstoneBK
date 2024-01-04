@@ -267,6 +267,7 @@ if (isset($_GET['aksi'])) {
                   <thead>
                   <tr>
                     <th>No</th>
+                    <th>Poli</th>
                     <th>Dokter</th>
                     <th>Jadwal</th>
                     <th>Keluhan</th>
@@ -278,13 +279,15 @@ if (isset($_GET['aksi'])) {
                   <?php 
                   $i= 1;
                   $queri5 = mysqli_query($mysqli, 
-                    "SELECT daftar_poli.id as idi, daftar_poli.keluhan, daftar_poli.no_antrian,jadwal_periksa.*,dokter.nama as dokter FROM daftar_poli 
+                    "SELECT daftar_poli.id as idi, daftar_poli.keluhan, daftar_poli.no_antrian,jadwal_periksa.*,dokter.nama as dokter, poli.nama_poli FROM daftar_poli 
                     JOIN jadwal_periksa ON jadwal_periksa.id=daftar_poli.id_jadwal
                     JOIN dokter ON dokter.id=jadwal_periksa.id_dokter
+                    JOIN poli ON poli.id=dokter.id_poli
                     WHERE daftar_poli.id_pasien=$idpasien");
                   while ($row = mysqli_fetch_array($queri5)){?>
                     <tr>
                       <td class="text-center" scope="row"><?php echo $i++ ?></td>
+                      <td><?php echo $row['nama_poli']?></td>
                       <td><?php echo $row['dokter']?></td>
                       <td><?php echo $row['hari'].", ".$row['jam_mulai']."-".$row['jam_selesai']?></td>
                       <td><?php echo $row['keluhan']?></td>

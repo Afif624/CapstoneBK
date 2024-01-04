@@ -159,16 +159,16 @@ if (!isset($_SESSION['dokter'])) {
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example" class="table table-bordered table-striped">
                   <thead>
                   <tr>
                     <th>No</th>
-                    <th>Pasien</th>
-                    <th>Keluhan</th>
-                    <th>Tanggal Periksa</th>
-                    <th>Catatan</th>
-                    <th>Obat-Obatan</th>
-                    <th>Biaya Periksa</th>
+                    <th>Nama Pasien</th>
+                    <th>Alamat</th>
+                    <th>No KTP</th>
+                    <th>No HP</th>
+                    <th>No RM</th>
+                    <th>Aksi</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -176,8 +176,7 @@ if (!isset($_SESSION['dokter'])) {
                   $i= 1;
                   $iddokter= $_SESSION['id-dokter'];
                   $queri5 = mysqli_query($mysqli, 
-                    "SELECT pasien.nama as pasien, daftar_poli.keluhan, periksa.*, 
-                    GROUP_CONCAT(obat.nama_obat) as obat FROM daftar_poli 
+                    "SELECT DISTINCT pasien.* FROM daftar_poli 
                     JOIN jadwal_periksa ON jadwal_periksa.id=daftar_poli.id_jadwal 
                     JOIN pasien ON pasien.id=daftar_poli.id_pasien 
                     JOIN periksa ON daftar_poli.id=periksa.id_daftar_poli 
@@ -189,16 +188,14 @@ if (!isset($_SESSION['dokter'])) {
                     $obatList = array_unique(explode(',', $row['obat']));?>
                     <tr>
                       <td class="text-center" scope="row"><?php echo $i++ ?></td>
-                      <td><?php echo $row['pasien']?></td>
-                      <td><?php echo $row['keluhan']?></td>
-                      <td><?php echo $row['tgl_periksa']?></td>
-                      <td><?php echo $row['catatan']?></td>
-                      <td class="text-center">
-                          <?php foreach ($obatList as $obat) {
-                              echo " " . $obat . "<br>";
-                          } ?>
+                      <td><?php echo $row['nama']?></td>
+                      <td><?php echo $row['alamat']?></td>
+                      <td><?php echo $row['no_ktp']?></td>
+                      <td><?php echo $row['no_hp']?></td>
+                      <td><?php echo $row['no_rm']?></td>
+                      <td><a class="btn btn-primary rounded-pill px-3" type="button" 
+                            data-toggle="modal" data-target="#modal-xl<?php echo $row['id']?>">Lihat Detail</a>
                       </td>
-                      <td class="text-center">Rp <?php echo $row['biaya_periksa'] ?></td>
                     </tr>
                   <?php }?>
                   </tbody>
@@ -233,6 +230,90 @@ if (!isset($_SESSION['dokter'])) {
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
+
+<?php 
+$i= 1;
+$iddokter= $_SESSION['id-dokter'];
+$queri5 = mysqli_query($mysqli, 
+  "SELECT DISTINCT pasien.* FROM daftar_poli 
+  JOIN jadwal_periksa ON jadwal_periksa.id=daftar_poli.id_jadwal 
+  JOIN pasien ON pasien.id=daftar_poli.id_pasien 
+  JOIN periksa ON daftar_poli.id=periksa.id_daftar_poli 
+  JOIN detail_periksa ON periksa.id=detail_periksa.id_periksa 
+  JOIN obat ON obat.id=detail_periksa.id_obat 
+  WHERE jadwal_periksa.id_dokter=$iddokter
+  GROUP BY hari,jam_mulai,no_antrian");
+while ($row = mysqli_fetch_array($queri5)){?>
+  <div class="modal fade" id="modal-xl<?php echo $row['id']?>">
+    <div class="modal-dialog modal-xl">
+      <div method="POST" class="modal-content">
+        <form method="post">
+        <div class="modal-header">
+          <h4 class="modal-title">Detail Riwayat Pasien</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="card-body">
+            <table id="example<?php echo $row['id']?>" class="table table-bordered table-striped">
+              <thead>
+              <tr>
+                <th>No</th>
+                <th>Pasien</th>
+                <th>Keluhan</th>
+                <th>Tanggal Periksa</th>
+                <th>Catatan</th>
+                <th>Obat-Obatan</th>
+                <th>Biaya Periksa</th>
+              </tr>
+              </thead>
+              <tbody>
+              <?php 
+              $i= 1;
+              $iddokter= $_SESSION['id-dokter'];
+              $idpasien= $row['id'];
+              $queridetail = mysqli_query($mysqli, 
+                "SELECT pasien.nama as pasien, daftar_poli.keluhan, periksa.*, 
+                GROUP_CONCAT(obat.nama_obat) as obat FROM daftar_poli 
+                JOIN jadwal_periksa ON jadwal_periksa.id=daftar_poli.id_jadwal 
+                JOIN pasien ON pasien.id=daftar_poli.id_pasien 
+                JOIN periksa ON daftar_poli.id=periksa.id_daftar_poli 
+                JOIN detail_periksa ON periksa.id=detail_periksa.id_periksa 
+                JOIN obat ON obat.id=detail_periksa.id_obat 
+                WHERE jadwal_periksa.id_dokter=$iddokter AND pasien.id=$idpasien
+                GROUP BY hari,jam_mulai,no_antrian");
+              while ($rowdetail = mysqli_fetch_array($queridetail)){
+                $obatList = array_unique(explode(',', $rowdetail['obat']));?>
+                <tr>
+                  <td class="text-center" scope="row"><?php echo $i++ ?></td>
+                  <td><?php echo $rowdetail['pasien']?></td>
+                  <td><?php echo $rowdetail['keluhan']?></td>
+                  <td><?php echo $rowdetail['tgl_periksa']?></td>
+                  <td><?php echo $rowdetail['catatan']?></td>
+                  <td class="text-center">
+                      <?php foreach ($obatList as $obat) {
+                          echo " " . $obat . "<br>";
+                      } ?>
+                  </td>
+                  <td class="text-center">Rp <?php echo $rowdetail['biaya_periksa'] ?></td>
+                </tr>
+              <?php }?>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+        </form>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+<?php } ?>
 
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
@@ -279,12 +360,22 @@ if (!isset($_SESSION['dokter'])) {
   $(function () {
     //Money Euro
     $('[data-mask]').inputmask()
-    $("#example1").DataTable({
+    $("#example").DataTable({
       "responsive": true, "lengthChange": false, "autoWidth": false,
       "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    
+    }).buttons().container().appendTo('#example_wrapper .col-md-6:eq(0)');
   });
 </script>
+<?php
+while ($row = mysqli_fetch_array($queri5)) { ?>
+  <script>
+    $(function () {
+      $("#example<?php echo $row['id']?>").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#example<?php echo $row['id']?>_wrapper .col-md-6:eq(0)');
+    });
+  </script>
+<?php } ?>
 </body>
 </html>

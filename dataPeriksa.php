@@ -240,7 +240,7 @@ $queriPeriksa = mysqli_query($mysqli,
 while ($row = mysqli_fetch_array($queriPeriksa)){
   $iddafpoli_baru = $row['idi'];
   if (isset($_POST['save'.$iddafpoli_baru])){
-    $tanggal_baru = date("Y-m-d");
+    $tanggal_baru = $_POST['newTanggal'];
     $catatan_baru = $_POST['newCatatan'];
     $queri1 = mysqli_query($mysqli, "INSERT INTO 
         periksa(id_daftar_poli,tgl_periksa,catatan) VALUES(
@@ -283,6 +283,27 @@ while ($row = mysqli_fetch_array($queriPeriksa)){
           </button>
         </div>
         <div class="modal-body">
+          <div class="form-group">
+            <label>Pasien:</label>
+            <div class="input-group">
+                <input type="text" class="form-control" value="<?php echo $row['pasien']; ?>" disabled>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Keluhan:</label>
+            <div class="input-group">
+                <input type="text" class="form-control" value="<?php echo $row['keluhan']; ?>" disabled>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Tanggal Periksa:</label>
+            <div class="input-group">
+                <input type="date" class="form-control" name="newTanggal" value="<?php echo date("Y-m-d") ?>">
+            </div>
+          </div>
+
           <!-- Date mm/dd/yyyy -->
           <div class="form-group">
             <label>Catatan:</label>
