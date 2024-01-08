@@ -402,7 +402,7 @@ if (isset($_GET['aksi'])) {
             // Mengambil dokter berdasarkan poli yang dipilih
             <?php
             $queriDokter = mysqli_query($mysqli, "SELECT jadwal_periksa.id, dokter.nama, dokter.id_poli, jadwal_periksa.hari, jadwal_periksa.jam_mulai, jadwal_periksa.jam_selesai FROM dokter
-                JOIN jadwal_periksa ON dokter.id = jadwal_periksa.id_dokter
+                JOIN jadwal_periksa ON dokter.id = jadwal_periksa.id_dokter WHERE jadwal_periksa.aktivasi='1'
                 GROUP BY dokter.id, dokter.nama, dokter.id_poli, jadwal_periksa.hari, jadwal_periksa.jam_mulai, jadwal_periksa.jam_selesai ORDER BY dokter.nama ASC");
             $selectJadwal='';
             while ($rowDokter = mysqli_fetch_array($queriDokter)) {

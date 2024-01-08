@@ -84,6 +84,18 @@ if (isset($_GET['aksi'])) {
     echo "<script>alert('Maaf, Anda tidak dapat mengupdate jadwal pada Hari H.');
         window.location.href = 'dataJadwal.php';
         </script>";
+  } else if ($aksi == 'aktif') {
+    $queri4 = mysqli_query($mysqli, "UPDATE jadwal_periksa SET
+              aktivasi='1' WHERE id='$id'");
+    echo "<script>alert('Selamat, Anda berhasil Mengaktifkan Jadwal Anda.');
+        window.location.href = 'dataJadwal.php';
+        </script>";
+  } else if ($aksi == 'nonaktif') {
+    $queri4 = mysqli_query($mysqli, "UPDATE jadwal_periksa SET
+              aktivasi='0' WHERE id='$id'");
+    echo "<script>alert('Selamat, Anda berhasil Menonaktifkan Jadwal Anda.');
+        window.location.href = 'dataJadwal.php';
+        </script>";
   }
 }
 ?>
@@ -323,6 +335,7 @@ if (isset($_GET['aksi'])) {
                     <th>Hari</th>
                     <th>Jam Mulai</th>
                     <th>Jam Selesai</th>
+                    <th>Status</th>
                     <th>Aksi</th>
                   </tr>
                   </thead>
@@ -361,6 +374,11 @@ if (isset($_GET['aksi'])) {
                       <td><?php echo $row['jam_mulai']?></td>
                       <td><?php echo $row['jam_selesai']?></td>
                       <td>
+                        <?php if ($row['aktivasi'] == 1) {?>Aktif<?php } 
+                        else{?>Nonaktif<?php }?>
+
+                      </td>
+                      <td>
                         <?php 
                         if ($row['hari']==$hari_ini){?>
                           <a class="btn btn-info rounded-pill px-3" 
@@ -373,6 +391,17 @@ if (isset($_GET['aksi'])) {
                           <a class="btn btn-danger rounded-pill px-3" 
                               href="dataJadwal.php?id=<?php echo $row['id']?>
                                   &aksi=hapus">Hapus</a>
+                                  <?php
+                        if ($row['aktivasi'] == 1) {?>
+                          <a class="btn btn-success rounded-pill px-3" 
+                            href="dataJadwal.php?id=<?php echo $row['id']?>
+                                  &aksi=nonaktif">Nonaktifkan</a>
+                        <?php
+                        } else {?>
+                          <a class="btn btn-warning rounded-pill px-3" 
+                            href="dataJadwal.php?id=<?php echo $row['id']?>
+                                  &aksi=aktif">Aktifkan</a>
+                        <?php }?>
                       </td>
                     </tr>
                   <?php }?>
